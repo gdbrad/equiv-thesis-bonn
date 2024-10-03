@@ -1,0 +1,41 @@
+% !TEX root = mythesis.tex
+
+%==============================================================================
+\chapter{Computational Setup}
+\label{sec:comp}
+%==============================================================================
+
+Distillation is costly initially both in storage and component construction. For the di-meson system we are investigating, the contraction cost is not the dominant contribution. We will use the MultiGrid (MG) solver from \texttt{QUDA}, \texttt{Chroma} with \texttt{Superbblas} support, the \texttt{PRIMME} eigensolver, and \texttt{Numpy Einsum} for contractions. The amount of computation and storage scales with the lattice size $N$ and the rank of the distillation basis, $n$. The optimal rank of the distillation basis is determined experimentally, but it is proportional to the spatial volume of the lattice.
+
+\section{Cost and Storage of Distillation}
+% \cite{romero_efficient_2020}.
+      \vspace{1em}
+       
+       % The product of        %  \texttt{max_tslices_in_contraction} \texttt{max_moms_in_contraction} and \texttt{max_vecs} controls how much memory is used for contractions. Their tuning is more critical when using GPUs. The optimal value is usually the largest values of the parameters that the CPU or device can handle.
+        % \begin{table}
+         \begin{minipage}{16cm}
+        \hspace*{2em}\begin{tabular}{ccc}
+        Computation    & Operations cost & Memory footprint \\ \hline
+        Distillation basis\footnote{Generate colorvector matrix elements}& $N^3Tn^3D$         & $N^3nT$      \\
+        Meson elementals\footnote{Contract two matrices $\to$ tensor} & $N^3Tn^3$      & $N^3n + n^3$  \\
+        Perambulators\footnote{Projection of the inverse Dirac operator $\to$ square matrices} & $N^3Tn$   & $N^3Tn$            \\
+        Contractions\footnote{Contract together matrix elements and perambulators}   & $n^4T$    & $n^{3}T$   
+        \end{tabular}
+        \end{minipage}
+        once a suitable set of perambulators compute, \textbf{reuse} to correlate a collection of interpolators
+        
+In order to perform spectroscopy calculations for a given ensemble, there exists a sequential dependency chain:
+\begin{itemize}
+     \setlength\itemsep{1em}
+        \item[\checkmark] \textbf{Ensemble generation:} $N_f = 2+1$ quark flavors, a tree level Symanzik improved gluon action and 6-stout dynamical smeared Wilson fermions
+        \item[\checkmark] \textbf{HPC Tasks:} Generation of distillation basis, perambulators, meson elementals using \texttt{Chroma} with \texttt{superbblas} support on the Jureca cluster at JSC
+        \item Construct \textbf{Di-meson distilled operators} using Hadspec method of subduction coefficents and helicity operators
+        \item[\checkmark] Perform \textbf{contractions} of multi-hadron operators $\to$ 2pt correlators
+        \item Construct correlation function coming from the \textbf{GEVP} in the right irreducible representation
+        \item \textbf{Compute spectrum} and energy shifts w.r.t to the $DD^*$ threshold for a heavy quark mass close to the charm quark mass.
+        \item \textbf{L\"uscher analysis} to obtain finite volume energies from Scattering amplitudes
+        \item \textbf{Search for Poles} AKA when an attractive potential is not deep enough to hold a bound state
+    \end{itemize}
+
+
+\section{Two-Point Correlation function} 

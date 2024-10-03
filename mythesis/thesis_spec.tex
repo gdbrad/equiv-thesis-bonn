@@ -1,0 +1,49 @@
+% !TEX root = mythesis.tex
+
+%==============================================================================
+\chapter{Hadron Spectroscopy on the Lattice}
+\label{sec:spec}
+%==============================================================================
+\newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
+
+\section{Gauge Field Smearing}
+In order to achieve overlap with states of interest in the continuum, namely the low-lying states, one must being with smearing of the quark fields via some smoothing function. A brief exposition of \textit{Jacobi smearing} will follow. 
+\begin{equation}
+    \tilde{\psi}_{a\alpha}(x) = \mathcal{S}_{ab}(x,y) \psi_{b\alpha}(y)
+\end{equation}
+Here, $x,y$ are lattice sites, $a,b$ are color indices, $\alpha$ a spin component. 
+
+This construction is derived from the ``parent'' representation of a gauge-invariant, spatially symmetric operation, which serves as a means of improving the projection onto low-lying states in correlation functions:
+\begin{align}
+    \tilde{\Psi}(\vec{x},t) = \sum_{\vec{y}} L(\vec{x},\vec{y})\psi(\vec{y},t)
+\end{align}
+Define the jacobi smearing operator as 
+\begin{align}
+\nabla
+\end{align}
+
+\section{Distillation Smearing}
+% \cite{peardon_novel_2009}
+The information we need to extract is 
+$$ V^{\dagger}M^{-1}V \rightarrow \tau $$ 
+where $\tau$ is the perambulator matrix on a single time slice. 
+$V(t)$ is a matrix with $4 \times N_v $  columns constructed from eigenvectors of the covariant 3d Laplace operator. It is important to note that $V(t)$ does not act on Dirac components. Thus, $V(t)$ is a block identity in Dirac space and each block contains the first $N_v$ eigenvectors $v_i(t)$. A given column $V^{(i,\alpha)}(t)$ has entries 
+$$ V^{(i,\alpha)}(t)_{\vec{x},t',\beta} = v_i(t)_{\vec{x}} \delta_{tt'}\delta_{\alpha\beta}$$
+
+
+Propagators transform with tensor product structure 
+$$\text{Lattice} \otimes \text{Matrix(Nc)} \otimes \text{Matrix(Ns)} \otimes \text{Complex}$$
+\textbf{check this and format with a figure from the TALK AT NRW FAIR }
+We can work out these dimensions for ourselves; A distilled propagator stored on disk has dimensions 
+$ 2 * 8 *2 *4 *4 *10 * 10 * 16$ 
+with the dictionary 
+$$\text{} \text{complex} * \text{snk} * \text{src} * N \times N_{\sigma} * \text{tslice}$$
+
+At this point, we need to actually perform contractions to obtain the correlator 
+$$C_M^{(2)}(t',t) = Tr[\Phi^B(t')\tau(t',t)\Phi^A(t)\tau(t,t')]$$ 
+where 
+$$\Phi^A_{\alpha\beta}(t) = V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \equiv V^{\dagger}(t)\mathcal{D}^A(t)V(t)S^A_{\alpha\beta}$$ 
+and 
+$$\tau_{\alpha\beta}(t',t) = V^{\dagger}(t')M_{\alpha\beta}^{-1}(t',t)V(t)$$ 
+is the perambulator, defined by the lattice representation of the Dirac operator, $M$. 
+See [https://arxiv.org/abs/0905.2160v1]. 
