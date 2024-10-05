@@ -1,0 +1,18 @@
+% !TEX root = mythesis.tex
+
+%==============================================================================
+\chapter{Mesonic Correlations}
+\label{sec:signal}
+%==============================================================================
+% \newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
+
+The meson mass spectrum is extracted via Bayesian analysis of two-point correlation functions. One can systematically improve the agreement with PDG values by using more statistics, employing a collection of ensembles with various quark mass values and lattice spacing. Ultimately, the continuum masses are what we are after. For the study of scattering processes, a Luescher Analysis can be performed in tandem with the spectrum calculations, forging a connection between lattice data and phenomenology. We will briefly walk through the Bayesian fitting approach to extract meson masses, the process by which the ``raw" correlator data is converted into the principal correlator, rotated correlator, or some chosen effective quantity in the optimized basis. 
+
+\section{Basic Correlation Functions}
+Given a dimeson operator $[MM']$, we have the following spectral decomposition: 
+\begin{align}
+    \braket{[MM'](t) [MM']^\dagger(0)} = \sum_{n}^{} |Z_{MM'}^{(n)}|^2 e^{-E_{MM'}^{(n)}t}
+\end{align}
+
+As described in \ref{sec:ops}, we can form a set of $N$ $MM'$ interpolating operators(interpolators) $$\{[MM']^{(0)},\dots,[MM']^{(N)}\}$$ which have non-trivial overlap with the mesonic state of interest $MM'$. The question is thus, How does one determine the magnitude of the overlaps with the state of interest? Conveniently, the outer product of the set of $N$ interpolating operators acting on itself creates a $N \times N$ matrix of $MM'$ correlators. Not surpisingly, these share the same spectrum. 
+

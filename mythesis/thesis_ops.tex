@@ -1,0 +1,127 @@
+% !TEX root = mythesis.tex
+
+%==============================================================================
+\chapter{Interpolating Operators}
+\label{sec:ops}
+%==============================================================================
+
+It is advantageous in lattice QCD studies to generate a large basis of interpolating operators \textbf{why}; Distillation allows us to restrict this basis to maximize computational efficiency in both the generation of the fundamental objects (perambulators, elementals) and contractions. We first focus on the zero momentum case then extend this framework to non-zero momentum, eg. mesons in flight. At bottom, we need to construct operators that create and destory a mesonic state, at some fixed time in Euclidean time. The information we can glean from this is the correlation of operators separated by some time $t$, whereby the transfer matrix eigenstates can be obtained \todo{CITE}.
+
+\section{Spin on a cubic lattice}
+
+\section{Operators on the lattice}
+Our simplest operator, representing a gauge-invariant construction of a quark and qntiquark located at different sites on the lattice along some path $P$ is 
+\begin{align}
+    \tilde{\psi}_(x_2)\Pi_P U \Gamma \psi(x_1)
+\end{align}
+where $\Gamma$ takes one of the following forms depending on the state of interest. Here we display the \textt{Chroma} conventions \cite{Edwards_2005}:
+\todo{CITE CHROMA}
+\newcommand{\half}{\frac{1}{2}}
+%\newcommand{\be}{\begin{equation}}
+%\newcommand{\ee}{\end{equation}}
+\newcommand{\be}{\begin{displaymath}}
+\newcommand{\ee}{\end{displaymath}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\bdm}{\begin{displaymath}}
+\newcommand{\edm}{\end{displaymath}}
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+\newcommand{\Tr}{\mbox{Tr}}
+
+\centerline{Chroma Euclidean Gamma Matrix Conventions}
+\vskip 5mm
+
+For particles of spin-1 can {\em arbitrarily } define a sign convention:
+\begin{align}
+  \rho(k) &\equiv \bar{\psi} \gamma_k \psi \nonumber \\
+  \varrho(k) &\equiv \bar{\psi} \gamma_k \gamma_4 \psi \nonumber\\
+  a_1(k) &\equiv \bar{\psi} \gamma_k \gamma_5 \psi \nonumber\\
+  b_1(k) &\equiv \bar{\psi}\tfrac{1}{2}  \epsilon_{ijk} \gamma_i \gamma_j \psi \nonumber
+\end{align}
+With this convention some of the chroma gamma matrices carry a minus sign when creating a state.\\
+
+\vspace{1cm}
+
+\begin{tabular}{c|c|c|c| r| c}
+$n_\Gamma(\mathrm{dec})$ & $n_\Gamma(\mathrm{bin})$ & name & $\Gamma$ & state & $\widetilde{n_\Gamma}(\mathrm{dec})$\\
+\hline
+0 & 0000 & a0 & $1$ & $a_0$ & 15\\
+1 & 0001 & rho\_x & $\gamma_1$ & $\rho(x)$ & 14\\
+2 & 0010 & rho\_y & $\gamma_2$ & $\rho(y)$ & 13\\
+3 & 0011 & b1\_z & $\gamma_1 \gamma_2$ & $b_1(z)$ & 12\\
+4 & 0100 & rho\_z & $\gamma_3$ & $\rho(z)$ & 11\\
+5 & 0101 & b1\_y & $\gamma_1 \gamma_3$ & $- b_1(y)$ & 10\\
+6 & 0110 & b1\_x & $\gamma_2 \gamma_3$ & $b_1(x)$ & 9\\
+7 & 0111 & pion\_2 & $\gamma_1 \gamma_2 \gamma_3 = \gamma_5 \gamma_4$ & $\pi$& 8 \\
+8 & 1000 & b0 & $\gamma_4$ & $b_0$ & 7 \\
+9 & 1001 & rho\_x\_2 & $\gamma_1 \gamma_4$ & $\varrho(x)$ & 6\\
+10 & 1010 & rho\_y\_2 & $\gamma_2 \gamma_4$ & $\varrho(y)$ & 5\\
+11 & 1011 & a1\_z & $\gamma_1 \gamma_2 \gamma_4 = \gamma_3 \gamma_5$ & $a_1(z)$ & 4\\
+12 & 1100 & rho\_z\_2 & $\gamma_3 \gamma_4$ &  $\varrho(z)$ & 3\\
+13 & 1101 & a1\_y & $\gamma_1 \gamma_3 \gamma_4 = - \gamma_2 
+\gamma_5$ & $- a_1(y)$ & 2\\
+14 & 1110 & a1\_x & $\gamma_2 \gamma_3 \gamma_4 = \gamma_1 \gamma_5$ & $a_1(x)$ & 1\\
+15 & 1111 & pion & $\gamma_1 \gamma_2 \gamma_3 \gamma_4 = \gamma_5$ &  $\pi$ & 0 \\
+
+\end{tabular}
+
+Armed with the continuum version of operators, which are classified via charge conjugation and Lorentz transformations, we can cosntruct our lattice operators. The first step is to perform a Wick rotation so that our operators now reside in euclidean spacetime, then substitute the covariant derivatives with the lattice covariant derivative \cite{G_ckeler_1996}, 
+\begin{align}
+    \overrightarrow{D_\mu}\psi(x) = \frac{1}{2a}(U_{x,\mu}\psi(x + \hat{\mu}) - U_{x-\hat{\mu},\mu}^\dagger\psi(x - \hat{\mu}))
+\end{align}
+
+\section{Derivative operators}
+Parallel transport of a lattice field is performed by applying a displacement operator to a quark field.  Let $q(x)$ be a quark field and $D_j^{(p)}$ ai displacement operator that moves the quark field for p lattice sites to the direction j in a covariant manner. Let $U$ be the gauge-link as defined in the previous section.
+\begin{align}
+    D_j^{(p)} q(x) = U_j(x) U_j(x+j) U_j(x+2j)...U_j(x+(p-1)j) q(x+pj)
+\end{align}
+with dictionary $x(0), y(1), z(2)$
+
+\section{Local meson operators}
+Below is the table of lattice irrep operators at $\vec{p} = (0,0,0)$ \cite{Dudek_2008}
+
+\begin{tabular}{ccc|ccc|ccc}
+    op. & name & cont.  & op. & name & cont. & op. & name & cont.\\
+    \hline
+    $\nabla^i$ & $(a_0 \times \nabla)_{T_1}$ & $1^{--}$ & $\mathbb{D}^i $ & $(a_0
+    \times \mathbb{D})_{T_2}$ & $2^{++}$ & $\mathbb{B}^i$ & $(a_0
+    \times \mathbb{B})_{T_1}$ & $1^{+-}$ \\
+    $\gamma^5 \nabla^i$ & $(\pi \times \nabla)_{T_1}$ & $1^{+-}$  &
+    $\gamma^5 \mathbb{D}^i $ & $(\pi
+    \times \mathbb{D})_{T_2}$ & $2^{-+}$ & $\gamma^5 \mathbb{B}^i$ & $(\pi
+    \times \mathbb{B})_{T_1}$ & $1^{--}$ \\
+    $\gamma^4 \gamma^5 \nabla^i$ & $(\pi_{(2)} \times \nabla)_{T_1}$ &
+    $1^{+-}$ & $\gamma^4 \gamma^5 \mathbb{D}^i $ & $(\pi_{(2)}
+    \times \mathbb{D})_{T_2}$ & $2^{-+}$ & $\gamma^4 \gamma^5 \mathbb{B}^i$ & $(\pi_{(2)}
+    \times \mathbb{B})_{T_1}$ & $1^{--}$ \\
+    $\gamma^4 \nabla^i$ & $(a_{0(2)} \times \nabla)_{T_1}$ & $1^{-+}$ &
+    $\gamma^4 \mathbb{D}^i $ & $(a_{0(2)}
+    \times \mathbb{D})_{T_2}$ & $2^{+-}$ & $\gamma^4 \mathbb{B}^i$ & $(a_{0(2)}
+    \times \mathbb{B})_{T_1}$ & $1^{++}$ \\
+
+\end{tabular}
+
+
+For the single pion case, : 
+\begin{itemize}
+    \item $\gamma_4\gamma_5$
+
+\end{itemize}
+In \texttt{Chroma} input files, local meson operators follow from zero displacement. 
+
+\section{Nonlocal meson operators}
+To study orbitally excited mesons we need to employ derivative operators which characterize spatial displacement of quarks on the lattice.
+these "forward-backward" gauge covariant derivatives allow us to access states with higher angular momentum. On the latttice, these derivatives are finite displacements of quark fields connected by the gauge links. We will include zero, single, and double derivative operators. We must ensure that the operators have definite charge conjugation as well as a projection operator within the corresponding irreps. \cite{liao2002excitedcharmoniumspectrumanisotropic}
+For the single pion, we have a set of three pseudoscalar operators which we can then solve the GEVP for
+\begin{itemize} 
+    \item $\gamma_4\gamma_5\gamma_i \nabla_i$
+    \item $\gamma_iB_i$ 
+    \item ? $\gamma_i\gamma_4B_i$ i think this changes the time reversal symmetry ? 
+    
+\end{itemize}
+The advantage of employing nonlocal operators is to achieve access to state4s with nonzero orbital angular momentum. We act on local meson operators with gauge covariant lattice displacements on one (source or sink) or both (source and sink), the smeared quark fields of the discretized theory, to produce nonlocal operators. 
+
+Following the CG construction of \cite{Basak_2005}
+
+\section{Mesons in flight}
