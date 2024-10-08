@@ -5,78 +5,36 @@
 \label{sec:ops}
 %==============================================================================
 
-It is advantageous in lattice QCD studies to generate a large basis of interpolating operators \textbf{why}; Distillation allows us to restrict this basis to maximize computational efficiency in both the generation of the fundamental objects (perambulators, elementals) and contractions. We first focus on the zero momentum case then extend this framework to non-zero momentum, eg. mesons in flight. At bottom, we need to construct operators that create and destory a mesonic state, at some fixed time in Euclidean time. The information we can glean from this is the correlation of operators separated by some time $t$, whereby the transfer matrix eigenstates can be obtained \todo{CITE}.
+It is advantageous in lattice QCD studies to generate a large basis of interpolating operators \textbf{why}; Distillation allows us to restrict this basis to maximize computational efficiency in both the generation of the fundamental objects (perambulators, elementals) and contractions. We first focus on the zero momentum case then extend this framework to non-zero momentum, eg. mesons in flight. At bottom, we need to construct operators that create and destory a mesonic state, at some fixed time in Euclidean time. The information we can glean from this is the correlation of operators separated by some time $t$, whereby the transfer matrix eigenstates can be obtained \todo{CITE}. Moreover, the key difference between lattice and continuum eigenstates is the notion of spin. The proceeding sections will build up to the computation of a $N \times N$ matrix of two-point correlation functions for each irrep. 
 
 \section{Spin on a cubic lattice}
-
+Angular momentum ceases to be a good quantum number on the lattice. Thus, in order to forge a link between conntinuum spin and spin on the lattice, we must transform lattice operators according to irreps of $O_h$. This optimizes the signal to noise ratio. Only then can we extract eigenstates of the hamiltonian 
+\todo{brief exposition on octahedral group and symmetries of the cube }
 \section{Operators on the lattice}
+The lattice regulator ``breaks'' the $SO(3)$ subgroup to a discrete subgroup. 
+$O,\bar{O}$ mapped into the appropiate Hilbert Space such that the corresponding operators $\hat{O} ,\hat{O^\dagger}$  annihilate and create the particle states of interest. 
+
+A hadronic operator is a functional of the lattice fields with supplied quantum numbers. These are the gauge-invariant color singlet objects. 
+
+We can identify physically allowed states via the spectral decomposition of propagators of interpolating operators: 
+$\braket{O(n_t)\bar{O(0)}} = \sum_{n}\braket{0|\hat{O}|k} \braket{k|\hat{O^{\dagger}}|0} e^{-n_taE_k}$
+
+It is important to note that different spin and parity correspond to different gamma matrices in the fermionic bilinears. 
+
+A general local meson interpolator has the form $O_M(n) = \bar{\psi}^{f_1}(n)\Gamma\psi^{f_2}(n)$ where $\Gamma$ is a monomial of gamma matrices and $f$ are of course the exposed flavor indices. 
+
+Now that we have our interpolators in hand, in order to obtain the euclidean correlator we need the conjugate interpolator which generates a meson state from the vacuum 
+
 Our simplest operator, representing a gauge-invariant construction of a quark and qntiquark located at different sites on the lattice along some path $P$ is 
 \begin{align}
     \tilde{\psi}_(x_2)\Pi_P U \Gamma \psi(x_1)
 \end{align}
-where $\Gamma$ takes one of the following forms depending on the state of interest. Here we display the \textt{Chroma} conventions \cite{Edwards_2005}:
-\todo{CITE CHROMA}
-\newcommand{\half}{\frac{1}{2}}
-%\newcommand{\be}{\begin{equation}}
-%\newcommand{\ee}{\end{equation}}
-\newcommand{\be}{\begin{displaymath}}
-\newcommand{\ee}{\end{displaymath}}
-\newcommand{\bea}{\begin{eqnarray}}
-\newcommand{\eea}{\end{eqnarray}}
-\newcommand{\bdm}{\begin{displaymath}}
-\newcommand{\edm}{\end{displaymath}}
-\newcommand{\<}{\langle}
-\renewcommand{\>}{\rangle}
-\newcommand{\Tr}{\mbox{Tr}}
-
-\centerline{Chroma Euclidean Gamma Matrix Conventions}
-\vskip 5mm
-
-For particles of spin-1 can {\em arbitrarily } define a sign convention:
-\begin{align}
-  \rho(k) &\equiv \bar{\psi} \gamma_k \psi \nonumber \\
-  \varrho(k) &\equiv \bar{\psi} \gamma_k \gamma_4 \psi \nonumber\\
-  a_1(k) &\equiv \bar{\psi} \gamma_k \gamma_5 \psi \nonumber\\
-  b_1(k) &\equiv \bar{\psi}\tfrac{1}{2}  \epsilon_{ijk} \gamma_i \gamma_j \psi \nonumber
-\end{align}
-With this convention some of the chroma gamma matrices carry a minus sign when creating a state.\\
-
-\vspace{1cm}
-
-\begin{tabular}{c|c|c|c| r| c}
-$n_\Gamma(\mathrm{dec})$ & $n_\Gamma(\mathrm{bin})$ & name & $\Gamma$ & state & $\widetilde{n_\Gamma}(\mathrm{dec})$\\
-\hline
-0 & 0000 & a0 & $1$ & $a_0$ & 15\\
-1 & 0001 & rho\_x & $\gamma_1$ & $\rho(x)$ & 14\\
-2 & 0010 & rho\_y & $\gamma_2$ & $\rho(y)$ & 13\\
-3 & 0011 & b1\_z & $\gamma_1 \gamma_2$ & $b_1(z)$ & 12\\
-4 & 0100 & rho\_z & $\gamma_3$ & $\rho(z)$ & 11\\
-5 & 0101 & b1\_y & $\gamma_1 \gamma_3$ & $- b_1(y)$ & 10\\
-6 & 0110 & b1\_x & $\gamma_2 \gamma_3$ & $b_1(x)$ & 9\\
-7 & 0111 & pion\_2 & $\gamma_1 \gamma_2 \gamma_3 = \gamma_5 \gamma_4$ & $\pi$& 8 \\
-8 & 1000 & b0 & $\gamma_4$ & $b_0$ & 7 \\
-9 & 1001 & rho\_x\_2 & $\gamma_1 \gamma_4$ & $\varrho(x)$ & 6\\
-10 & 1010 & rho\_y\_2 & $\gamma_2 \gamma_4$ & $\varrho(y)$ & 5\\
-11 & 1011 & a1\_z & $\gamma_1 \gamma_2 \gamma_4 = \gamma_3 \gamma_5$ & $a_1(z)$ & 4\\
-12 & 1100 & rho\_z\_2 & $\gamma_3 \gamma_4$ &  $\varrho(z)$ & 3\\
-13 & 1101 & a1\_y & $\gamma_1 \gamma_3 \gamma_4 = - \gamma_2 
-\gamma_5$ & $- a_1(y)$ & 2\\
-14 & 1110 & a1\_x & $\gamma_2 \gamma_3 \gamma_4 = \gamma_1 \gamma_5$ & $a_1(x)$ & 1\\
-15 & 1111 & pion & $\gamma_1 \gamma_2 \gamma_3 \gamma_4 = \gamma_5$ &  $\pi$ & 0 \\
-
-\end{tabular}
+where $\Gamma$ takes one of the following forms depending on the state of interest. 
 
 Armed with the continuum version of operators, which are classified via charge conjugation and Lorentz transformations, we can cosntruct our lattice operators. The first step is to perform a Wick rotation so that our operators now reside in euclidean spacetime, then substitute the covariant derivatives with the lattice covariant derivative \cite{G_ckeler_1996}, 
 \begin{align}
     \overrightarrow{D_\mu}\psi(x) = \frac{1}{2a}(U_{x,\mu}\psi(x + \hat{\mu}) - U_{x-\hat{\mu},\mu}^\dagger\psi(x - \hat{\mu}))
 \end{align}
-
-\section{Derivative operators}
-Parallel transport of a lattice field is performed by applying a displacement operator to a quark field.  Let $q(x)$ be a quark field and $D_j^{(p)}$ ai displacement operator that moves the quark field for p lattice sites to the direction j in a covariant manner. Let $U$ be the gauge-link as defined in the previous section.
-\begin{align}
-    D_j^{(p)} q(x) = U_j(x) U_j(x+j) U_j(x+2j)...U_j(x+(p-1)j) q(x+pj)
-\end{align}
-with dictionary $x(0), y(1), z(2)$
 
 \section{Local meson operators}
 Below is the table of lattice irrep operators at $\vec{p} = (0,0,0)$ \cite{Dudek_2008}
@@ -122,6 +80,162 @@ For the single pion, we have a set of three pseudoscalar operators which we can 
 \end{itemize}
 The advantage of employing nonlocal operators is to achieve access to state4s with nonzero orbital angular momentum. We act on local meson operators with gauge covariant lattice displacements on one (source or sink) or both (source and sink), the smeared quark fields of the discretized theory, to produce nonlocal operators. 
 
+\subsection{Derivative operators}
+Parallel transport of a lattice field is performed by applying a displacement operator to a quark field.  Let $q(x)$ be a quark field and $D_j^{(p)}$ ai displacement operator that moves the quark field for p lattice sites to the direction j in a covariant manner. Let $U$ be the gauge-link as defined in the previous section.
+\begin{align}
+    D_j^{(p)} q(x) = U_j(x) U_j(x+j) U_j(x+2j)...U_j(x+(p-1)j) q(x+pj)
+\end{align}
+with dictionary $x(0), y(1), z(2)$.
+
+Thus, a quark bilinear in its $O_h$ representation is tied together with the spatial path $(x_1 \to x_2$). Our new operator will thus live in a representation determined by the Clebsch-Gordan decomposition of the product of representations.  
+
 Following the CG construction of \cite{Basak_2005}
 
 \section{Mesons in flight}
+
+\section{Meson-Meson Interpolators}
+The global $SU(3)$ color symmetry requires that the minimal irreducible color singlet systems can only be $q\bar{q}$, $qqq$, $gg$, $q\bar{q}g$ etc. which implies that multi-quark systems can only exist as molecular configurations if there are no other binding mechanisms. Moreover, as a consequence of the $SU(3)^C$ coupling rule, the state $QQ\bar{q}\bar{q}$ has dimeson configuration as well as diquark-antidiquark configuration. 
+
+We will subsequently compare the spectrum obtained from the GEVP using these two operator constructions. 
+In the isospin limit, $m_u = m_d$, we have the isospin antisymmetric triplet $cc(\bar{u}\bar{d} - \bar{d}\bar{u}) * \frac{1}{\sqrt{2}}$ or the symmetric triplet $cc(\bar{u}\bar{d} + \bar{d}\bar{u}) * \frac{1}{\sqrt{2}}$  flavor states when two light quarks are intechanged \cite{Ortiz-Pacheco:2023ble} We construct interpolating operators with two heavy quarks and two light quarks for each value of total spin, $J=0,1,2$, such that one spin value overlaps onto a tetraquark state of given quantum numbers, the other onto the lowest strong decay dimeson states with the same quantum numbers as the former. We employ the distillation technique to obtain a large class of interpolating operators that satisfy the afroementioned overlap onto the ground state. 
+
+Due to the $SU(3)_c$ coupling rule, When treating tetraquarks as a dimeson system, $(q\bar{q})(q\bar{q})$, the two possible combinations of dimeson $SU(3)_c$ representations that produce a total color singlet state are $({1_c \otimes 1_c})_{1_c}$ and $({8_c \otimes 8_c})_{1_c}$. When the pseudoscalar $D$ and vector $D^*$ are coupled together, the resulting system is $DD^*$ with total angular momentum and parity $J^P = 1^+$. Moreover, the wave function of the tetraquark state $T_{cc}^+$ includes two color singlet channels \todo{cite}:
+\begin{align}
+    DD^* = \frac{1}{\sqrt{2}}(D^{0*}D^+ - D^+D^*), \\
+    D^*D^* = \frac{1}{\sqrt{2}}(D^{*0}D^{*+} - D^{*+}D^{*0})
+\end{align} 
+We can construct the color singlet tetraquark interpolating operators the following two ways:
+\begin{enumerate}
+    \item Meson-meson operators are constructed out of single-meson elementals. For mesons in flight, we need to access the helicity operators.  
+
+    In general, \textbf{meson-meson operators} are constructed by forming a product of two single-meson operators with appropriate flavor symmetry: \cite{Junnarkar_2019}
+    \begin{align}
+    \mathcal{M}^1(x) &= M_1(x)M_2^*(x) - M_2(x)M_1^*(x) \\
+    M_{1,2}(x) &= (l_{1,2})^a_\alpha(x) (\gamma_5)_{\alpha\beta} \bar{Q}^a_\beta(x) \\
+    M_{1,2}^*(x) &= (l_{1,2})^a_\alpha(x) (\gamma_i)_{\alpha\beta} \bar{Q}^a_\beta(x) 
+    \end{align}
+    We can construct this operator with the same quantum number of that of the diquark prescription $(ll\bar{Q}\bar{Q})$ like so 
+    \begin{equation}
+    \mathcal{M}^0(x) = \bar{Q}_\alpha^a(x)(\gamma_5)_{\alpha\beta}l^a_\beta(x) \bar{Q}_\kappa^b(x)(\gamma_5)_{\kappa\rho}l^b_\rho(x)
+    \end{equation}
+
+    Fermion-bilinear operators with continuum spin $J$ and momentum $\vec{p}$ are written like so \cite{Cheung_2017}
+    \begin{equation}
+    \mathcal{O}^{J,m}(\vec{p},t) = \sum_{\vec{x}} e^{i\vec{p}\vec{x}} \bar{q}(\vec{x},t) [\Gamma \overleftrightarrow{D}\dots \overleftrightarrow{D}]^{J,m}q(\vec{x},t)
+\end{equation}
+    In the most general form,
+
+    \begin{equation}
+        \mathcal{O}_{\Lambda,\mu}^P(\vec{p}=\vec{0},t) = \sum_{\mu_1,\mu_2,\hat{q}} \mathbb{C}(\vec{p} = \vec{0},\Lambda^P,\mu;\vec{q},\Lambda_1,\mu_1;-\vec{q},\Lambda_2,\mu_2) \Omega^{M_1}_{\Lambda_1,\mu_1}(\vec{q},t) \Omega^{M_2}_{\Lambda_2,\mu_2}(-\vec{q},t)
+    \end{equation}
+
+
+    \item diquark-antidiquark prescription. However, we will not employ this method. According to \cite{Ortiz-Pacheco:2023ble}, there is no significant shift in the ground state energy when adding diquark-antidiquark interpolators to the basis when the heavy quark mass is close to $m_{q=c}^{phys}$. However, with quark masses approaching the bottom quark, this no longer holds, since it is posited that $T_{bb}$ is a diquakr-antidiquark state. \textbf{WHY}
+\end{enumerate}
+
+The interpolators we will consider follow that of \cite{Padmanath_2022} in Table I, 
+\begin{figure}[h]
+% \includegraphics*[scale=0.6]{interpolator_table.png}
+\caption{Interpolators along with their total momenta, spatial lattice symmetry group, total spin-parity, and partial wave (of $DD^*$ scattering) that contribute to each irreducible representation}
+\end{figure}
+The optimized single-meson operators are denoted by $M^{[n_1n_2n_3]}_\Lambda$ where $M$ is the meson, $\Lambda$ is the lattice irrep, $[n_1n_2n_3]$ is the momentum in units of $\frac{2\pi}{L}$.  \cite{Cheung_2017}
+
+\subsection[$T_1^+$]
+The interpolating operators used to calculate the spectra for the doubly charmed sector with isospin-0 belonging to the irrep $T_1^+$ are as follows:
+\subsubsection*{$D^{*[000]}_{T_1}D^{*[000]}_{T_1}$} 
+
+
+
+\subsubsection{$D^{[000]}_{A_1}D^{*[000]}_{T_1}$} 
+For the meson-meson operator ($I=0$) corresponding to flavor content $ud\bar{c}\bar{c}$,
+    \begin{equation}
+    [(M_1M_2^*)(M_2M_1^*)] = (DD^{0*})(D^0D^*)
+    \end{equation}
+
+Inserting summation over states of momenta:
+\begin{align}
+    \mathcal{O}^{DD^*} = \sum_{k,j} A_{kj} D(\vec{p_{1k}})D_j^*(\vec{p}_{2k}) 
+\end{align} where $\vec{p_{1k}} + \vec{p_{2k}} = \vec{P}$
+\begin{align}
+hi
+\end{align}
+
+
+\subsection{Distilled Meson-Meson Interpolators}
+First, consider the creation and annihilation interpolators for the $D(0)$ meson with quark content $c\bar{u}$, $\bar{c}u$. For smeared quark sources, we can write 
+\begin{align}
+    O(x_0,t_0) &= \Big[\sum_{x_1} S_i^{t_0,\alpha_0,a_0}(x_1)^{\alpha_1}_{a_1}\bar{q}^{(f)}(x_1,t)^{\alpha_1}_{a_1}\Big] \Gamma^{\alpha_0\beta_0} \Big[\sum_{x_2} (S_k^{t_0,\beta_0,a_0}(x_2)^\dagger)^{\alpha_2}_{a_2}\bar{q}^{(f')}(x_2,t)^{\alpha_2}_{a_2}\Big] \\
+    &= \overline q_i(x_0, t)^{\alpha_0}_{a_0} \Gamma^{\alpha_0\beta_0} q_k(x_0,t)^{\beta_0}_{a_0}
+\end{align}
+
+Let $S = \Box$ and Fourier transform into $p$-space. 
+$$
+\overline \chi(p, t) = \overline u_w(t) \Box_{wx}(t) \cdot e^{-ip\cdot x} \Gamma^A_{xy}(t) \cdot \Box_{yz}(t) c_z(t)
+$$
+Simplifying the notation some (e.g., $\Gamma^A = e^{-ip\cdot x} \Gamma^A_{xy}(t)$), we can express the correlation function as 
+$$
+\begin{aligned}
+C^{2\text{-pt}}(t^\prime, t) &= \braket{\chi(t) \overline \chi(t^\prime)} \\
+&= \braket{
+\overline c(t^\prime) \Box(t^\prime) \Gamma^B(t^\prime) \Box(t^\prime)u(t^\prime) \cdot
+\overline u(t) \Box(t) \Gamma^A(t) \Box(t) c(t)
+} \\ 
+&= \text{Tr}
+\left[
+\overline u(t^\prime) V(t^\prime) 
+\cdot
+\underbrace{V^\dagger(t^\prime) \Gamma^B V(t^\prime)}_{\Phi^B(t^\prime)} 
+\cdot 
+V^\dagger(t^\prime) c(t^\prime)
+\cdot
+\overline c(t) V(t) 
+\cdot
+\underbrace{V^\dagger(t) \Gamma^A V(t)}_{\Phi^A(t)} 
+\cdot
+V^\dagger(t) u(t)
+\right] \\
+&= \text{Tr} \left[
+\Phi^B(t^\prime) 
+\cdot
+\underbrace{V^\dagger(t^\prime) c(t^\prime) \overline c(t) V(t)}_{\tau_c(t^\prime, t)}
+\cdot
+\Phi^A(t)
+\cdot
+\underbrace{V^\dagger(t) u(t) \overline u(t^\prime) V(t^\prime)}_{\tau_u(t, t^\prime)}
+\right] \\
+&= \text{Tr}\left[
+\Phi^A(t)
+\tau_u(t^\prime, t)
+\Phi^B(t)
+\tau_c(t, t^\prime)
+\right]
+\end{aligned}
+$$
+Here we have defined the \textbf{perambulator} (including Dirac indices)
+$$
+\tau_q(t^\prime, t)^{\alpha \beta} = V^\dagger(t^\prime) D^{-1}_q(t^\prime, t)^{\alpha \beta} V(t)
+$$
+as well as elemental $\Phi$
+$$\begin{align}
+\Phi^{A, \alpha\beta} 
+&= V^\dagger(t) (\Gamma^A)^{\alpha \beta} V(t) \\
+&= V^\dagger(t) \mathcal D^A(t)V(t) \mathcal S^{A, \alpha \beta}
+\end{align}$$
+where in the second line we have assumed we can decompose $\Phi$ into  terms that act only within coordinate/color space $\mathcal D$ or Dirac/spin space $\mathcal S$.
+
+
+
+
+\subsubsection{Distilled meson-meson correlators}
+Now that we have laid out the distillation framework in terms of quark fields present in single meson interpolating operators, we can form the distilled versions of the meson-meson operators. 
+
+Because distilled single-particle operators can be projected onto states of definite $p$ at the source and sink, we can construct multi-hadron operators using operators of the form
+$$
+\chi_{M M^\prime}(|\vec{p}_{rel}|^2 t) = \sum_{k\in\mathcal{R}(\vec{p}_{rel})}\chi_M(k, t) \chi_{M^\prime}(-k, t)
+$$
+The multi-meson correlators can then be factorized into perambulators as before.
+
+
+
+After these steps are complete, we can proceed to perform various contractions on the resulting quark propagator.
+

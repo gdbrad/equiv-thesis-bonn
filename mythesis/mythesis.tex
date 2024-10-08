@@ -29,12 +29,12 @@
 % Glossary package
 % \usepackage[acronym,toc,nosuper]{glossaries}
 % TikZ packages and libraries
-% \usepackage{tikz}
-% \usepackage{tikz-3dplot}
-% \usepackage{pgfplots}
-% \usetikzlibrary{positioning,shapes,arrows}
-% \usetikzlibrary{decorations.pathmorphing}
-% \usetikzlibrary{decorations.markings}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+\usetikzlibrary{positioning,shapes,arrows}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.markings}
 \usepackage{thesis_defs}
 
 %------------------------------------------------------------------------------
@@ -63,7 +63,7 @@
 % Use standard_refs-bibtex if you use bibtex or bibtex8
 % and standard_refs-biber  if you use biber
 \addbibresource{bib/thesis_refs.bib}
-% \addbibresource{bib/standard_refs-biber.bib}
+\addbibresource{bib/standard_refs-biber.bib}
 
 %------------------------------------------------------------------------------
 % The following definitions are used to produce the title pages
@@ -110,8 +110,8 @@
 \includeonly{%
   thesis_intro,
   thesis_spec,
-  thesis_comp,
   thesis_ops,
+  thesis_comp,
   thesis_signal,
   thesis_future,
   thesis_appendix,
@@ -124,6 +124,8 @@
 \graphicspath{%
   {figs/}%
   {figs/cover/}%
+  {figs/figures/}%
+
 }
 
 %------------------------------------------------------------------------------

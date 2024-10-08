@@ -4,7 +4,38 @@
 \chapter{Hadron Spectroscopy on the Lattice}
 \label{sec:spec}
 %==============================================================================
-\newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
+% \newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
+\section{Background}
+We first provide a brief overview of continuum QCD how one can extract low-energy observables using lattice QCD. In the following section we describe the nature of the so-called signal-to-noise problem which plagues calculations in LQCD, most notably the extraction of hadronic observables. As the Euclidean time between operators increases, the signal-to-noise ratio degrades exponentially. It is standard practice to use quark field smearing algorithms to circumvent this problem and ultimately extract ground-state energies with better statistics. Next, we introduce the mature method of distillation \cite{peardon_novel_2009} and the improvements to the signal of correlation functions in contrast to traditional smearing techniques. This will spell out the theoretical basis for the proceeding chapter on the computational implementation of this method to ultimately compute mesonic correlation functions. 
+
+\section{Continuum QCD}
+QCD is the gauge theory of strong interactions with color $SU(3)$ as the underlying gauge group. The color degree of freedom was introduced into the quark model to satisfy the pauli princicple. The matter-fields in the theory are quarks (spin-$\frac{1}{2}$) fermions with six flavors and three possible colors (we don't detect these in experiment!). No quark has ever been observed as an asympotically-free state. We can write down the QCD Lagrangian from the fre-quark Lagrangian by applying the gauge principle with resepect to the group $SU(3)$. The fundamental objects are the quark fields 
+\begin{align}
+    q_{\alpha,f,A} \text{where} \alpha: 1,\dots,4 (\text{Dirac-spinor indices}), f: 1,\dots,6 (\text{flavor}), A: 1,2,3 \text{color}
+\end{align}
+The QCD Lagrangian is 
+\begin{align}
+    \mathcal{L}_{QCD} = \sum_{f=1}^{6} \sum_{a,b=1}^{3} \sum_{\alpha,\beta,\mu=0}^{3} (i(\gamma^\mu)_{\alpha\beta}(\mathcal{D}_{\mu;ab}) - m_f\delta_{\alpha\beta}\delta_{ab}) \psi_{\beta b}^{(f)} + \sum_{i=1}^{8}\sum_{\mu,\nu=0}^{3} -\frac{1}{4} G_{\mu\nu}^i G_i^{\mu\nu}
+\end{align}
+Integrating over Minkowski spacetime, we obtain the QCD action 
+\begin{align}
+    S_{QCD} = \int d^4x \{\underbrace{-\frac{1}{4} \sum_{a=1}^{8}F_{\mu\nu}^a F^{a\mu\nu}}_{S_G[A]}+ \underbrace{\sum_{f}\sum_{i,j=1}^{3}\sum_{\alpha,\beta=1}^{4}\bar{q}_{i,a}^f(x)[i(\gamma^\mu)_{\alpha\beta}(\mathcal{D}_\mu)_{ij} - m_f\delta_{ij}\delta_{\alpha\beta}]q_{j,\beta}^f(x)}_{S_f[A,\bar{q},q]}\}
+\end{align}
+ 
+
+\section{Lattice QCD }
+
+QCD is defined as LQCD as the lattice spacing goes to 0; With infinite compute time we can exactly solve QCD under one assumption, which is that we are in the right phase of the theory. It needs to be emphasized that LQCD is \textbf{not} a model, rather, it is the only non-perturbative regularization scheme in the infared regime that is systematically improvable. This improvement manifests itself via the following properties of discretized spacetime, which are tightly coupled to high-performance computing architecture. The crucial feature of this discretized version of the continuum theory is gauge covariance, namely $m_{gluon} \rightarrow 0$, which is the only way the theory can remain renormalizable without adding new terms. 
+\begin{itemize}
+    \item Discretization scale ($a$) where there are no infinities at finite values of $a$
+    \item Finite Volume 
+    \item Unphysical quark mass, which allows us to extrapolate to the physical quark mass with effective field theory 
+\end{itemize}
+
+In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\Chi$PT, etc. which will not be discussed in this work) to make predictions abot the standard model. Modern computing power allows us to perform these at the physical pion mass. 
+\subsection{Discretization of the Fermion and Gauge Actions}
+
+\subsection{Wilson Fermion Action}
 
 \section{Gauge Field Smearing}
 In order to achieve overlap with states of interest in the continuum, namely the low-lying states, one must being with smearing of the quark fields via some smoothing function. A brief exposition of \textit{Jacobi smearing} will follow. 

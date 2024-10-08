@@ -14,5 +14,50 @@ Given a dimeson operator $[MM']$, we have the following spectral decomposition:
     \braket{[MM'](t) [MM']^\dagger(0)} = \sum_{n}^{} |Z_{MM'}^{(n)}|^2 e^{-E_{MM'}^{(n)}t}
 \end{align}
 
-As described in \ref{sec:ops}, we can form a set of $N$ $MM'$ interpolating operators(interpolators) $$\{[MM']^{(0)},\dots,[MM']^{(N)}\}$$ which have non-trivial overlap with the mesonic state of interest $MM'$. The question is thus, How does one determine the magnitude of the overlaps with the state of interest? Conveniently, the outer product of the set of $N$ interpolating operators acting on itself creates a $N \times N$ matrix of $MM'$ correlators. Not surpisingly, these share the same spectrum. 
+As described in \todo{operator section ref }, we can form a set of $N$ $MM'$ interpolating operators(interpolators) $$\{[MM']^{(0)},\dots,[MM']^{(N)}\}$$ which have non-trivial overlap with the mesonic state of interest $MM'$. The question is thus, How does one determine the magnitude of the overlaps with the state of interest? Conveniently, the outer product of the set of $N$ interpolating operators acting on itself creates a $N \times N$ matrix of $MM'$ correlators. Not surpisingly, these share the same spectrum. 
+
+In theory, one could fit all $N \times N$ correlators using a simultaneous fit, however, at this point it is standard practice to solve the generalized eigenvalue problem for the set of correlation functions. Solving the following for the eigenvectors $v_n(t,t_0)$ gives us an optimized operator basis
+\begin{align}
+    C(t)v_n(t,t_0) = \lambda_n(t,t_0)C(t_0)v_n(t,t_0)
+\end{align}
+Instead of solving the GEVP at the operator level, we deal with the correlation functions directly to yield the optimized correlators 
+\begin{align}
+    \braket{[\mathbb{MM'}](t) [MM']^\dagger(0)} = \sum_{n}^{} |Z_{MM'}^{(n)}|^2 e^{-E_{MM'}^{(n)}t} 
+\end{align}
+
+
+$(\bar{\psi}^{f_1}(n)\Gamma\psi^{f_2}(n))^{\dagger} = \pm \bar{\psi}^{f_2} \Gamma \psi^{f_1}$
+which can be derived from the fact that the interchange of grassmann variables induces a minus sign and the $\gamma_4$ appears via the relation $\bar{\psi} = \psi^{\dagger}\gamma_4$
+TLDR; the conjugate interpolator is obtained by interchanging the $\psi$ and $\bar{\psi}$ and ordering the barred quark fields to the left. 
+
+Now we actually have to evaluate the correlators by employing the property that the fermionic expectation value factorizes with respect to the flavors. We then apply wick's theorem for each of the two flavors, this is **fermion contraction** , by which we obtain the dirac operators. In this case, **only grassmann variables with equal flavor can be contracted with eachother** 
+
+\section{Momentum projection}
+For non-local operators used to construct mesons in flight, we must momentum project into states of definite momentum, which will reside in some irreducible representation of the octahedral group. 
+
+We want hadrons tates to be states of definite spatial momentum $\textbf{p}$ 
+$\tilde{O}(\textbf{p},n_t) = \frac{1}{\sqrt{\Lambda_3}} \sum_{n\in\Lambda_3} O(\textbf{n},nt)e^{-ia\textbf{np}}$ 
+
+The interpolator is projected to definite spatial momentum and is located on a single time slice $n_t$
+
+Note that it is only necessary to project one of the two interpolators of a correlation function to definite momentum, typically at the sink. 
+
+\section{Signal Saturation with Distillation}
+
+Here we present results for a systematic study of how the signal of the pion two-point correlator with $\vec{p}=(0,0,0)$ is affected by the rank of the distillation basis (number of eigenvectors used) and the number of $t_{src}$ insertions. The sizes of the distillation basis take values in the set $n_{vec}\in {32,64,96,128}$ and the number of $t_{src} \in {1,2,4,8,12,24}$. We perform this study on the ensemble \todo{insert ens info }
+
+The raw correlators after averaging over all $t_{src}$ \todo{insert plot of corrs from corrfit}
+
+The effective masses for each $n_{vec}$: \todo{insert plot}
+
+\subsection{Fits to the $\pi$ correlator}
+
+\subsubsection{$n_{vec}$ dependence}
+
+\todo{insert master pot}
+\subsubsection{$t_{src}$ dependence}
+\todo{insert master plot}
+
+\subsection{}
+
 

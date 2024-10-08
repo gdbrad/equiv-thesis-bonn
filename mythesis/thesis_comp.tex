@@ -5,7 +5,59 @@
 \label{sec:comp}
 %==============================================================================
 
-Distillation is costly initially both in storage and component construction. For the di-meson system we are investigating, the contraction cost is not the dominant contribution. We will use the MultiGrid (MG) solver from \texttt{QUDA}, \texttt{Chroma} with \texttt{Superbblas} support, the \texttt{PRIMME} eigensolver, and \texttt{Numpy Einsum} for contractions. The amount of computation and storage scales with the lattice size $N$ and the rank of the distillation basis, $n$. The optimal rank of the distillation basis is determined experimentally, but it is proportional to the spatial volume of the lattice.
+Distillation is costly initially both in storage and component construction. This pays off at the end of the day as we can reuse the perambulators for subsequent calculations of different systems. For the di-meson system we are investigating, the contraction cost is not the dominant contribution. We will use the MultiGrid (MG) solver from \texttt{QUDA}, \texttt{Chroma} with \texttt{Superbblas} support, the \texttt{PRIMME} eigensolver, and \texttt{Numpy Einsum} for contractions. The amount of computation and storage scales with the lattice size $N$ and the rank of the distillation basis, $n$. The optimal rank of the distillation basis is determined experimentally, but it is proportional to the spatial volume of the lattice. All of the high-peformance computing tasks below were performed on the Jureca cluster at the Juelich Supercomputing Centre. 
+\section{Pipeline}
+\begin{figure}[!htbp]
+    \begin{center}
+      \scalebox{1.0}{
+        \begin{tikzpicture}[node distance=1.5cm and 3cm] % Adjusted node distance
+            \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
+            \tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+            \tikzstyle{process} = [rectangle, minimum width=3.5cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=orange!30]
+            \tikzstyle{arrow} = [thick,->,>=stealth]
+
+            % Nodes
+            \node (start) [startstop] {Input File Generation: XML and SLURM Batch Scripts};
+            \node (in1) [io, below of=start] {Calculate Distillation Basis/Eigenvectors};
+            
+            % Parallel processes
+            \node (pro1) [process, below of= in1, xshift=-3cm, yshift=-1cm] {Meson Elementals};
+            \node (pro2) [process, below of= in1, xshift=cm, yshift=-1cm] {Perambulators};
+            
+            % H5 Conversion processes
+            \node (h5conv1) [process, below of=pro1] {H5 Conversion};
+            \node (h5conv2) [process, below of=pro2] {H5 Conversion};
+            
+            % Contracting
+            \node (contract) [process, below of=h5conv1, xshift=3cm] {Contract Elementals and Perambulators};
+            
+            % Output
+            \node (out1) [io, below of=contract] {Output the Two-Point Correlator};
+            \node (stop) [startstop, below of=out1] {H5 output ($N_t \times N_{cfg}$)};
+
+            % Arrows
+            \draw [arrow] (start) -- (in1);
+            \draw [arrow] (in1) -- (pro1);
+            \draw [arrow] (in1) -- (pro2);
+            \draw [arrow] (pro1) -- (h5conv1);
+            \draw [arrow] (pro2) -- (h5conv2);
+            \draw [arrow] (h5conv1) -- (contract);
+            \draw [arrow] (h5conv2) -- (contract);
+            \draw [arrow] (contract) -- (out1);
+            \draw [arrow] (out1) -- (stop);
+        \end{tikzpicture}
+      }
+    \end{center}
+    \caption{Flowchart of the computational workflow for computing lattice objects with distillation.}
+    \label{fig:alg_flow}
+\end{figure}
+
+\subsection{Eigenpairs/Distillation Basis Calculation}
+This is the first step in the calculation which ``seeds'' the subsequent calculation of elementals and perambulators. We use the \verb|Primme| eigensolver \todo{cite this}  
+
+\subsection{Elementals Calculation}
+
+\subsection{Perambulators Calculation}
 
 \section{Cost and Storage of Distillation}
 % \cite{romero_efficient_2020}.
