@@ -5,6 +5,36 @@
 
 \section{Discrete Group Theory}
 
+We obtain the stationary state energies of QCD using periodic boundary conditions by working in a cubic box. However, we no longer have the full rotational symmetry of the continuum. The lattice breaks rotational symmetry due to the fact that the spatial volume of the hypercube possess only discrete rotational symmetry, that of a cube, so we can think of this as a subgroup of the full rotational symmetry in the continuum. Consequently, these stationary states can no longer be labelled by the typical spin-$J$ quantum numbers. Thus, we need a ``new'' quantum number. The group theory machinery to obtain these new quantum numbers are the irreps of the cubic space group. \textbf{The interpolating operators used in a lattice calculation must transform irreducibly under all symmetries of the 3D-cubic lattice}. 
+
+ Irreducible representations(irreps) of the discrete rotational symmetry of the spatial volume of our 4D hypercube (the lattice) are members of the little group $O_h$. Thus, we must use a scheme to map the continuum spin quantum number eg. $J=0,1,2,\dots$ to the notion of spin on the lattice where the correspondence is \cite{Dudek_2010}
+\begin{table}
+    \begin{tabular}{ccl}
+    $J$ & & irreps \\
+    \hline
+    $0$ & & $A_1(1)$ \\
+    $1$ & & $T_1(3)$ \\
+    $2$ & & $T_2(3) \oplus E(2)$\\
+    $3$ & & $T_1(3) \oplus T_2(3) \oplus A_2(1)$\\
+    $4$ & & $A_1(1) \oplus T_1(3) \oplus T_2(3) \oplus E(2)$
+\end{tabular}
+\caption{Continuum spins subduced into lattice irreps $\Lambda(\mathrm{dim})$.}
+\label{Table:Subduce}
+\end{table}
+    
+The input data one needs to provide in order to obtain the correct little group ($L$), and thus the corresponding ``shells'', is 
+\begin{align}
+    O_h,P \rightarrow L \\
+    \{l\vec{k}, \forall l \in L\}
+\end{align}
+Where $l$ is a $3\times3$ matrix and $P$ is total momenta. This satisfies the relation $l\ket{k_1} = \ket{k_2}$ and leads to the more general relation 
+\begin{align}
+    \braket{k_i|l|k_j} = (M_l)_{ij}
+\end{align} 
+Where $M_l$ is a permutation matrix which is a reducible representation of $L$ and has the dimensions $|\text{shell}| \times |\text{shell}|$. 
+
+
+
 \section{Conventions}
 
 \subsection{\texttt{Chroma} Euclidean Dirac Matrices}

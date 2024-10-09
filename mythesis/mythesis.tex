@@ -15,16 +15,13 @@
 % Pass TeX Live version to the package.
 % Use command pdflatex --version to find out which version you are running.
 % twoside=true is suitable for printing, while twoside=false is probably better for PDF version.
-\usepackage[twoside=true]{ubonn-thesis}
+\usepackage[twoside=true,texlive=2022]{ubonn-thesis}
 
 %------------------------------------------------------------------------------
 % Adjustments to standard biblatex style.
 % Change option to backref=false when your thesis is ready to turn off back-referencing.
 % Pass the option showurl=false to shorten your bibliography by not including url fields.
 \usepackage[backref=true]{ubonn-biblatex}
-
-\usepackage{braket}
-
 %------------------------------------------------------------------------------
 % Glossary package
 % \usepackage[acronym,toc,nosuper]{glossaries}
@@ -39,6 +36,7 @@
 \usepackage{tablefootnote}
 \usepackage{multirow}
 \usepackage{booktabs}
+\usepackage{braket}
 %------------------------------------------------------------------------------
 % Instead of colouring  links, cites, table of contents etc.
 % put them in a coloured box for the screen version.
@@ -65,7 +63,7 @@
 % Use standard_refs-bibtex if you use bibtex or bibtex8
 % and standard_refs-biber  if you use biber
 \addbibresource{bib/thesis_refs.bib}
-\addbibresource{bib/standard_refs-biber.bib}
+% \addbibresource{bib/standard_refs-biber.bib}
 
 %------------------------------------------------------------------------------
 % The following definitions are used to produce the title pages
@@ -126,8 +124,6 @@
 \graphicspath{%
   {figs/}%
   {figs/cover/}%
-  {figs/figures/}%
-
 }
 
 %------------------------------------------------------------------------------
