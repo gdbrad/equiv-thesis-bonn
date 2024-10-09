@@ -87,7 +87,34 @@ Parallel transport of a lattice field is performed by applying a displacement op
 \end{align}
 with dictionary $x(0), y(1), z(2)$.
 
-Thus, a quark bilinear in its $O_h$ representation is tied together with the spatial path $(x_1 \to x_2$). Our new operator will thus live in a representation determined by the Clebsch-Gordan decomposition of the product of representations.  
+Thus, a quark bilinear in its $O_h$ representation is tied together with the spatial path $(x_1 \to x_2$). Our new operator will thus live in a representation determined by the Clebsch-Gordan decomposition of the product of representations. 
+
+\subsection{Single derivative operators}
+
+\subsection{Two derivative operators}
+
+$\gamma_5\mathbb{D}^i$
+
+$[\gamma_5 * (dydz + dzdy), \gamma_5 * (dzdx + dxdz), \gamma_5 * (dxdy + dydx)]$
+$disp_{2_3}+ disp_{3_2}, disp_{3_1} + disp_{1_3}, disp_{1_2} + disp_{2_1}$
+
+$\gamma_4\gamma_5\mathbb{D}^i$
+
+$[\gamma_5\gamma_4 * (dydz + dzdy), \gamma_5\gamma_4 * (dzdx + dxdz), \gamma_5\gamma_4 * (dxdy + dydx)]$
+
+$\gamma_5\mathbb{B}^i$
+
+$[\gamma_5 * (dydz + -dzdy), \gamma_5 * (dzdx + -dxdz), \gamma_5 * (dxdy + -dydx)]$
+
+$\gamma_4\gamma_5\mathbb{B}^i$
+
+$[\gamma_5\gamma_4 * (dydz + -dzdy), \gamma_5\gamma_4 * (dzdx + -dxdz), \gamma_5\gamma_4 * (dxdy + -dydx)]$
+
+$\gamma_5\mathbb{E}^i$
+
+$\gamma_4\gamma_5\mathbb{E}^i$
+
+
 
 Following the CG construction of \cite{Basak_2005}
 
@@ -121,7 +148,7 @@ We can construct the color singlet tetraquark interpolating operators the follow
 
     Fermion-bilinear operators with continuum spin $J$ and momentum $\vec{p}$ are written like so \cite{Cheung_2017}
     \begin{equation}
-    \mathcal{O}^{J,m}(\vec{p},t) = \sum_{\vec{x}} e^{i\vec{p}\vec{x}} \bar{q}(\vec{x},t) [\Gamma \overleftrightarrow{D}\dots \overleftrightarrow{D}]^{J,m}q(\vec{x},t)
+    \mathcal{O}^{J,m}(\vec{p},t) = \sum_{\vec{x}} e^{i\vec{p}\vec{x}} \bar{q}(\vec{x},t) \[\Gamma \overleftrightarrow{D}\dots \overleftrightarrow{D}]^{J,m}q(\vec{x},t)\
 \end{equation}
     In the most general form,
 
@@ -134,22 +161,22 @@ We can construct the color singlet tetraquark interpolating operators the follow
 \end{enumerate}
 
 The interpolators we will consider follow that of \cite{Padmanath_2022} in Table I, 
-\begin{figure}[h]
-% \includegraphics*[scale=0.6]{interpolator_table.png}
+\begin{figure}\[h]\
+% \includegraphics*\[scale=0.6]{interpolator_table.png}\
 \caption{Interpolators along with their total momenta, spatial lattice symmetry group, total spin-parity, and partial wave (of $DD^*$ scattering) that contribute to each irreducible representation}
 \end{figure}
-The optimized single-meson operators are denoted by $M^{[n_1n_2n_3]}_\Lambda$ where $M$ is the meson, $\Lambda$ is the lattice irrep, $[n_1n_2n_3]$ is the momentum in units of $\frac{2\pi}{L}$.  \cite{Cheung_2017}
+The optimized single-meson operators are denoted by $M^{\[n_1n_2n_3]}_\Lambda$ where $M$ is the meson, $\Lambda$ is the lattice irrep, $\[n_1n_2n_3]$ is the momentu\m in units of $\frac{2\pi}{L}$.  \cite{Cheung_2017}\
 
-\subsection[$T_1^+$]
+\subsection\[$T_1^+$]\
 The interpolating operators used to calculate the spectra for the doubly charmed sector with isospin-0 belonging to the irrep $T_1^+$ are as follows:
-\subsubsection*{$D^{*[000]}_{T_1}D^{*[000]}_{T_1}$} 
+\subsubsection*{$D^{*\[000]}_{T_1}D^{*\[000]}_{T_1}$} \
 
 
 
-\subsubsection{$D^{[000]}_{A_1}D^{*[000]}_{T_1}$} 
+\subsubsection{$D^{\[000]}_{A_1}D^{*\[000]}_{T_1}$} \
 For the meson-meson operator ($I=0$) corresponding to flavor content $ud\bar{c}\bar{c}$,
     \begin{equation}
-    [(M_1M_2^*)(M_2M_1^*)] = (DD^{0*})(D^0D^*)
+    \[(M_1M_2^*)(M_2M_1^*)] = (DD^{0*})(D^0D^*)\
     \end{equation}
 
 Inserting summation over states of momenta:
@@ -164,7 +191,7 @@ hi
 \subsection{Distilled Meson-Meson Interpolators}
 First, consider the creation and annihilation interpolators for the $D(0)$ meson with quark content $c\bar{u}$, $\bar{c}u$. For smeared quark sources, we can write 
 \begin{align}
-    O(x_0,t_0) &= \Big[\sum_{x_1} S_i^{t_0,\alpha_0,a_0}(x_1)^{\alpha_1}_{a_1}\bar{q}^{(f)}(x_1,t)^{\alpha_1}_{a_1}\Big] \Gamma^{\alpha_0\beta_0} \Big[\sum_{x_2} (S_k^{t_0,\beta_0,a_0}(x_2)^\dagger)^{\alpha_2}_{a_2}\bar{q}^{(f')}(x_2,t)^{\alpha_2}_{a_2}\Big] \\
+    O(x_0,t_0) &= \Big\[\sum_{x_1} S_i^{t_0,\alpha_0,a_0}(x_1)^{\alpha_1}_{a_1}\bar{q}^{(f)}(x_1,t)^{\alpha_1}_{a_1}\Big] \Gamma^{\\alpha_0\beta_0} \Big\[\sum_{x_2} (S_k^{t_0,\beta_0,a_0}(x_2)^\dagger)^{\alpha_2}_{a_2}\bar{q}^{(f')}(x_2,t)^{\alpha_2}_{a_2}\Big\] \\
     &= \overline q_i(x_0, t)^{\alpha_0}_{a_0} \Gamma^{\alpha_0\beta_0} q_k(x_0,t)^{\beta_0}_{a_0}
 \end{align}
 
@@ -181,7 +208,7 @@ C^{2\text{-pt}}(t^\prime, t) &= \braket{\chi(t) \overline \chi(t^\prime)} \\
 \overline u(t) \Box(t) \Gamma^A(t) \Box(t) c(t)
 } \\ 
 &= \text{Tr}
-\left[
+\left\[\
 \overline u(t^\prime) V(t^\prime) 
 \cdot
 \underbrace{V^\dagger(t^\prime) \Gamma^B V(t^\prime)}_{\Phi^B(t^\prime)} 
@@ -194,7 +221,7 @@ V^\dagger(t^\prime) c(t^\prime)
 \cdot
 V^\dagger(t) u(t)
 \right] \\
-&= \text{Tr} \left[
+&= \text{Tr} \left\[\
 \Phi^B(t^\prime) 
 \cdot
 \underbrace{V^\dagger(t^\prime) c(t^\prime) \overline c(t) V(t)}_{\tau_c(t^\prime, t)}
@@ -203,7 +230,7 @@ V^\dagger(t) u(t)
 \cdot
 \underbrace{V^\dagger(t) u(t) \overline u(t^\prime) V(t^\prime)}_{\tau_u(t, t^\prime)}
 \right] \\
-&= \text{Tr}\left[
+&= \text{Tr}\left\[\
 \Phi^A(t)
 \tau_u(t^\prime, t)
 \Phi^B(t)

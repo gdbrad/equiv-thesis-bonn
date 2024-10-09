@@ -32,17 +32,10 @@ TLDR; the conjugate interpolator is obtained by interchanging the $\psi$ and $\b
 
 Now we actually have to evaluate the correlators by employing the property that the fermionic expectation value factorizes with respect to the flavors. We then apply wick's theorem for each of the two flavors, this is **fermion contraction** , by which we obtain the dirac operators. In this case, **only grassmann variables with equal flavor can be contracted with eachother** 
 
-\section{Momentum projection}
-For non-local operators used to construct mesons in flight, we must momentum project into states of definite momentum, which will reside in some irreducible representation of the octahedral group. 
+\section{Mesonic Signal Saturation}
 
-We want hadrons tates to be states of definite spatial momentum $\textbf{p}$ 
-$\tilde{O}(\textbf{p},n_t) = \frac{1}{\sqrt{\Lambda_3}} \sum_{n\in\Lambda_3} O(\textbf{n},nt)e^{-ia\textbf{np}}$ 
-
-The interpolator is projected to definite spatial momentum and is located on a single time slice $n_t$
-
-Note that it is only necessary to project one of the two interpolators of a correlation function to definite momentum, typically at the sink. 
-
-\section{Signal Saturation with Distillation}
+We present preliminary results for the mass and overlap factors of a single pion with $\vec{p} = (000)$ in order to determine the optimal distillation parameters eg. rank of the distillation basis and number of time sources. This determination will allow us to optimize compute resources for the eigenbasis, perambulators, and elementals for the rest of the ensembles \todo{see ensemble table} we have generated. 
+\section{Correlator Fits}
 
 Here we present results for a systematic study of how the signal of the pion two-point correlator with $\vec{p}=(0,0,0)$ is affected by the rank of the distillation basis (number of eigenvectors used) and the number of $t_{src}$ insertions. The sizes of the distillation basis take values in the set $n_{vec}\in {32,64,96,128}$ and the number of $t_{src} \in {1,2,4,8,12,24}$. We perform this study on the ensemble \todo{insert ens info }
 
@@ -59,5 +52,19 @@ The effective masses for each $n_{vec}$: \todo{insert plot}
 \todo{insert master plot}
 
 \subsection{}
+
+
+
+
+\section{Momentum projection}
+For non-local operators used to construct mesons in flight, we must momentum project into states of definite momentum, which will reside in some irreducible representation of the octahedral group. 
+
+We want hadrons tates to be states of definite spatial momentum $\textbf{p}$ 
+$\tilde{O}(\textbf{p},n_t) = \frac{1}{\sqrt{\Lambda_3}} \sum_{n\in\Lambda_3} O(\textbf{n},nt)e^{-ia\textbf{np}}$ 
+
+The interpolator is projected to definite spatial momentum and is located on a single time slice $n_t$
+
+Note that it is only necessary to project one of the two interpolators of a correlation function to definite momentum, typically at the sink. 
+
 
 

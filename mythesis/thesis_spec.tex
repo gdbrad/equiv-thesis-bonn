@@ -54,7 +54,8 @@ Define the jacobi smearing operator as
 \end{align}
 
 \section{Distillation Smearing}
-% \cite{peardon_novel_2009}
+The computation of all-to-all quark propagators is crucial in LQCD calculations of correlation functions for a suitably large set of interpolators. This is computationally expensive as the number of ``solves'' of the lattice Dirac matrix grows \todo{how does it scale for all to all maybe romero paper}. By projecting quark fields into a subspace(with rank less than that of the original \todo{hilbert space/vector space?}), we can reliably compute all-to-all propagators\cite{peardon_novel_2009}. Within this reduced subspace, we can project operators onto definite momentum at both the source and sink. Hermiticity of operators is also guarunteed with this method, which bodes well for solving the GEVP within each irrep of interest. As scattering studies require well-controlled momentum insertions, this will serve us well at later stages of the $T_cc(3875)$ analysis.  
+
 The information we need to extract is 
 $$ V^{\dagger}M^{-1}V \rightarrow \tau $$ 
 where $\tau$ is the perambulator matrix on a single time slice. 
