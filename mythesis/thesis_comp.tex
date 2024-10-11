@@ -5,7 +5,7 @@
 \label{sec:comp}
 %==============================================================================
 
-Distillation is costly initially both in storage and component construction. This pays off at the end of the day as we can reuse the perambulators for subsequent calculations of different systems. For the di-meson system we are investigating, the contraction cost is not the dominant contribution. We will use the MultiGrid (MG) solver from \texttt{QUDA}, \texttt{Chroma} with \texttt{Superbblas} support, the \texttt{PRIMME} eigensolver, and \texttt{Numpy Einsum} for contractions. The amount of computation and storage scales with the lattice size $N$ and the rank of the distillation basis, $n$. The optimal rank of the distillation basis is determined experimentally, but it is proportional to the spatial volume of the lattice. All of the high-peformance computing tasks below were performed on the Jureca cluster at the Juelich Supercomputing Centre. 
+Distillation is costly initially both in storage and component construction. This pays off at the end of the day as we can reuse the perambulators for subsequent calculations; The inversions can be precomputed and stored on disk. For the di-meson system we are investigating, the contraction cost is not the dominant contribution. We will use the MultiGrid (MG) solver from \texttt{QUDA}, \texttt{Chroma} with \texttt{Superbblas} support, the \texttt{PRIMME} eigensolver, and \texttt{Numpy Einsum} for contractions. The amount of computation and storage scales with the lattice size $N$ and the rank of the distillation basis, $n$. The optimal rank of the distillation basis is determined experimentally, but it is proportional to the spatial volume of the lattice. All of the high-peformance computing tasks below were performed on the Jureca cluster at the Juelich Supercomputing Centre. 
 \section{Pipeline}
 \begin{figure}[!htbp]
     \begin{center}
@@ -18,11 +18,11 @@ Distillation is costly initially both in storage and component construction. Thi
 
             % Nodes
             \node (start) [startstop] {Input File Generation: XML and SLURM Batch Scripts};
-            \node (in1) [io, below of=start] {Calculate Distillation Basis/Eigenvectors};
+            \node (in1) [io, below of=start] {Calculate Distillation Basis/Eigenpairs (GPU)};
             
             % Parallel processes
             \node (pro1) [process, below of= in1, xshift=-3cm, yshift=-1cm] {Meson Elementals};
-            \node (pro2) [process, below of= in1, xshift=cm, yshift=-1cm] {Perambulators};
+            \node (pro2) [process, below of= in1, xshift=3cm, yshift=-1cm] {Perambulators};
             
             % H5 Conversion processes
             \node (h5conv1) [process, below of=pro1] {H5 Conversion};
@@ -51,9 +51,16 @@ Distillation is costly initially both in storage and component construction. Thi
     \caption{Flowchart of the computational workflow for computing lattice objects with distillation.}
     \label{fig:alg_flow}
 \end{figure}
+\section{Algebraic Multigrid Methods in LQCD}
 
 \subsection{Eigenpairs/Distillation Basis Calculation}
-This is the first step in the calculation which ``seeds'' the subsequent calculation of elementals and perambulators. We use the \verb|Primme| eigensolver \todo{cite this}  
+This is the first step in the calculation which is input data for the generation of elementals and perambulators. We use the \verb|Primme| eigensolver to obtain the eigenpairs(eigenvalues,eigenvectors) of the Hermitian Wilson-Dirac operator\cite{PRIMME}\cite{Frommer:2020ovr}. 
+
+The Dirac equation 
+\begin{align}
+  \mathcal{D}\psi + m \cdot \psi = \eta
+\end{align}
+
 
 \subsection{Elementals Calculation}
 
@@ -89,9 +96,125 @@ In order to perform spectroscopy calculations for a given ensemble, there exists
         \item \textbf{Search for Poles} AKA when an attractive potential is not deep enough to hold a bound state
     \end{itemize}
 
+  \section{Contractions}
+  We must ``tie" together the perambulators and elementals with some Dirac gamma structure, where we isolate the channel of interest ($J^{PC}$ continuum quantum numbers) with the lattice group representation. For a single meson correlator, \\ 
+
+  \begin{tikzpicture}[node distance=0.1cm]  % Minimal space between nodes
+    \node (box1) [draw, fill=blue!20, minimum width=1.5cm, minimum height=1.5cm] {S};
+    \node (box2) [draw, fill=red!20, minimum width=1.5cm, minimum height=1.5cm, right=of box1] {$\gamma_5$};
+    \node (box3) [draw, fill=blue!20, minimum width=1.5cm, minimum height=1.5cm, right=of box2] {S};
+    \node (box4) [draw, fill=red!20, minimum width=1.5cm, minimum height=1.5cm, right=of box3] {$\gamma_5$};
+    
+    % Draw diagonal slash through box 2
+    \draw (box2.north west) -- (box2.south east);
+    
+    % Draw diagonal slash through box 4
+    \draw (box4.north west) -- (box4.south east);
+    
+    % Draw the "tr" label
+    \node at ($(box1.west) + (-0.8,0)$) {\textbf{tr}};
+    
+    % Draw large brackets around the first and last boxes
+    \draw[thick] 
+        ($(box1.north west) + (-0.4, 0.2)$) -- ($(box1.south west) + (-0.4, -0.2)$); % left bracket
+    \draw[thick] 
+        ($(box4.north east) + (0.4, 0.2)$) -- ($(box4.south east) + (0.4, -0.2)$);  % right bracket
+  \end{tikzpicture}
+  \\ 
+
+\begin{tikzpicture}[node distance=0.08cm]
+  
+  % Part 2: Sequence of shapes (rectangles and squares), colored and skinnier
+  \node (vrect1) [draw, fill=green!20, minimum width=0.3cm, minimum height=2cm, below=1.5cm of box1, anchor=west] {$V$};
+  \node (hrect1) [draw, fill=green!20, minimum width=2cm, minimum height=0.5cm, right=of vrect1] {$V^\dagger$};
+  \node (square1) [draw, fill=blue!20, minimum width=1.5cm, minimum height=1.5cm, right=of hrect1] {S};
+  
+  \node (vrect2) [draw, fill=green!20, minimum width=0.3cm, minimum height=2cm, right=of square1] {$V$};
+  \node (hrect2) [draw, fill=green!20, minimum width=2cm, minimum height=0.5cm, right=of vrect2] {$V^\dagger$};
+  \node (square2) [draw, fill=red!20, minimum width=1.5cm, minimum height=1.5cm, right=of hrect2] {$\gamma_5$};
+  
+  \node (vrect3) [draw, fill=green!20, minimum width=0.3cm, minimum height=2cm, right=of square2] {$V$};
+  \node (hrect3) [draw, fill=green!20, minimum width=2cm, minimum height=0.5cm, right=of vrect3] {$V^\dagger$};
+  \node (square3) [draw, fill=blue!20, minimum width=1.5cm, minimum height=1.5cm, right=of hrect3] {S};
+
+  \node (vrect4) [draw, fill=green!20, minimum width=0.3cm, minimum height=2cm, right=of square3] {$V$};
+  \node (hrect4) [draw, fill=green!20, minimum width=2cm, minimum height=0.5cm, right=of vrect4] {$V^\dagger$};
+  \node (square4) [draw, fill=red!20, minimum width=1.5cm, minimum height=1.5cm, right=of hrect4] {$\gamma_5$};
+  % Draw diagonal slash through box 2
+  \draw (square2.north west) -- (square2.south east);
+    
+  % Draw diagonal slash through box 4
+  \draw (square4.north west) -- (square4.south east);
+
+  % Draw large brackets around the first and last boxes
+  % Draw the "tr" label
+  \node at ($(vrect1.west) + (-0.8,0)$) {$\rightarrow$\textbf{tr}};
+  \draw[thick] 
+  ($(vrect1.north west) + (-0.4, 0.2)$) -- ($(vrect1.south west) + (-0.4, -0.2)$); % left bracket
+  \draw[thick] 
+  ($(square4.north east) + (0.2, 0.4)$) -- ($(square4.south east) + (0.2, -0.4)$);  % right bracket
+  
+\end{tikzpicture}
+\\
+\begin{tikzpicture}[node distance=0.1cm]  % Minimal space between nodes
+
+  \node (box1) [draw, fill=blue!20, minimum width=0.5cm, minimum height=0.5cm] {$\tau$};
+  \node (box2) [draw, fill=red!20, minimum width=0.5cm, minimum height=0.5cm, right=of box1] {$\phi_0$};
+  \node (box3) [draw, fill=blue!20, minimum width=0.5cm, minimum height=0.5cm, right=of box2] {$\tau$};
+  \node (box4) [draw, fill=red!20, minimum width=0.5cm, minimum height=0.5cm, right=of box3] {$\phi_t$};
+  
+  \draw (box2.north west) -- (box2.south east);
+  
+  \draw (box4.north west) -- (box4.south east);
+  
+  \node at ($(box1.west) + (-0.8,0)$) {= \textbf{tr}};
+  
+  \draw[thick] 
+      ($(box1.north west) + (-0.4, 0.2)$) -- ($(box1.south west) + (-0.4, -0.2)$); % left bracket
+  \draw[thick] 
+      ($(box4.north east) + (0.4, 0.2)$) -- ($(box4.south east) + (0.4, -0.2)$);  % right bracket
+\end{tikzpicture}
+\\
+\noindent
+\textbf{tr} 
+\begin{tikzpicture}[baseline={(current bounding box.center)}, node distance=1.2cm] % Minimal space between nodes
+
+  % Define smaller boxes without internal labels
+  \node (box0) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm] {};
+  \node (box_q0) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box0] {};
+  \node (box1) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm, right=of box_q0] {};
+  \node (box_q1) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box1] {};
+  \node (box2) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm, right=of box_q1] {};
+  \node (box_q2) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box2] {};
+  \node (box3) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm, right=of box_q2] {};
+  \node (box_q3) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box3] {};
+  
+  % Attach the subscript and time labels to the right of the boxes
+  \node at ($(box0.east) + (0.5, 0)$) {\small $_0(0)$};
+  \node at ($(box_q0.east) + (0.7, 0)$) {\small $_{q0}$(t$_0$, t$_1$)};
+  \node at ($(box1.east) + (0.5, 0)$) {\small $_1$(t$_1$)};
+  \node at ($(box_q1.east) + (0.5, 0)$) {\small $_{q1}$(t$_1$, t$_2$)};
+  \node at ($(box2.east) + (0.5, 0)$) {\small $_2$(t$_2$)};
+  \node at ($(box_q2.east) + (0.5, 0)$) {\small $_{q2}$(t$_2$, t$_3$)};
+  \node at ($(box3.east) + (0.5, 0)$) {\small $_3$(t$_3$)};
+  \node at ($(box_q3.east) + (0.5, 0)$) {\small $_{q3}$(t$_3$, t$_0$)};
+  
+  % Draw large brackets around the first and last boxes
+  \draw[thick] 
+      ($(box0.north west) + (-0.4, 0.1)$) -- ($(box0.south west) + (-0.4, -0.1)$); % left bracket
+  \draw[thick] 
+      ($(box_q3.north east) + (0.4, 0.1)$) -- ($(box_q3.south east) + (0.4, -0.1)$);  % right bracket
+
+\end{tikzpicture}
+where are $4N_v \times 4N_v$ matrices. A contraction must be carrried out for every gauge configuration (we use 200 in this study); On each configuration, every timeslice and time source is accessed ($N_t = 96$,  $#t_{src} = 24)$ 
+
+
+
+
+
 \section{Ensemble Details}
 We generated ensembles with $N_f = 2+1$ quark flavors, with 6-stout dynamical smeared Wilson fermions and a tree-level Symanzik improved gluon action. Having several $a$ and $m_{\pi}$ at our disposal permit a systematic study of $m_{\pi}$ dependence. Since the doubly charmed tetraquark of interest is close to $D^0D^0\pi^+$ threshold, it is sensitive to $m_{ud}$, thus, it is advantageous to have many ensembles. 
-\\ 
+We are using the action and parameters already employed and tuned for Ref. \cite{Durr:2008zz}. 
 
 \begin{tabular}{ccccccc}
 \multirow{5}{*}{\substack{$\beta = 3.30$\\ \quad$a = 0.125[fm]$ }} & & $m_{ud}$ & $m_{s}$ & $L^3 \times T$ & $m_\pi$ [MeV] & $N_{conf}$\\
@@ -119,5 +242,3 @@ We generated ensembles with $N_f = 2+1$ quark flavors, with 6-stout dynamical sm
 \end{tabular}
 
 
-
-\section{Two-Point Correlation function} 

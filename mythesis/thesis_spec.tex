@@ -32,12 +32,14 @@ QCD is defined as LQCD as the lattice spacing goes to 0; With infinite compute t
     \item Unphysical quark mass, which allows us to extrapolate to the physical quark mass with effective field theory 
 \end{itemize}
 
-In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\Chi$PT, etc. which will not be discussed in this work) to make predictions abot the standard model. Modern computing power allows us to perform these at the physical pion mass. 
+In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\chi$PT, etc. which will not be discussed in this work) to make predictions abot the standard model. Modern computing power allows us to perform these at the physical pion mass. \todo{add details from my Brown final project for better summary}
 \subsection{Discretization of the Fermion and Gauge Actions}
 
 \subsection{Wilson Fermion Action}
 
 \section{Gauge Field Smearing}
+Gauge links, the edges on the lattice connecting the vertices(quark sites), are the discretized version of gluons in the continuum theory of QCD. They are known to introduce noise in the form of short range fluctuations. To circumvent this, different types of ``smearing'' are typically applied during the generation of ensembles. 
+
 In order to achieve overlap with states of interest in the continuum, namely the low-lying states, one must being with smearing of the quark fields via some smoothing function. A brief exposition of \textit{Jacobi smearing} will follow. 
 \begin{equation}
     \tilde{\psi}_{a\alpha}(x) = \mathcal{S}_{ab}(x,y) \psi_{b\alpha}(y)
@@ -48,10 +50,27 @@ This construction is derived from the ``parent'' representation of a gauge-invar
 \begin{align}
     \tilde{\Psi}(\vec{x},t) = \sum_{\vec{y}} L(\vec{x},\vec{y})\psi(\vec{y},t)
 \end{align}
-Define the jacobi smearing operator as 
+Define the jacobi smearing operator as \todo{prob dont need this}
 \begin{align}
 \nabla
 \end{align}
+We employ 6-stout smearing \cite{stout} and add smear the quark fields using distillation in the proceeding phase of the computational chain. \cite{peardon_novel_2009}. Here we briefly describe stout smearing and arrive at the definition of a stout link. 
+
+\subsection{Stout Smearing}
+Each gauge link on the lattice has four neighboring staples. 
+Let $C_\mu(x)$ denote the weighted sum of the perpendicular staples which
+begin at lattice site $x$ and terminate at neighboring site 
+$x\!+\!\hat{\mu}$ \cite{stout}:
+
+\begin{eqnarray}
+ C_\mu(x)&=&\sum_{\nu\neq \mu}\rho_{\mu\nu}\biggl(
+ U_\nu(x) U_\mu(x\!+\!\hat{\nu}) U_\nu^\dagger(x\!+\!\hat{\mu})\nonumber\\
+&&+ U^\dagger_\nu(x\!-\!\hat{\nu}) U_\mu(x\!-\!\hat{\nu})
+  U_\nu(x\!-\!\hat{\nu}\!+\!\hat{\mu})
+\biggr), \label{eq:Cdef}
+\end{eqnarray}
+
+This is the formulation of a plaquette, where the magnitude of the vectors $\hat{u}, \hat{V}$ is the length of a single lattice spacing (given by the particular ensemble) and the weights $\rho_{\mu\nu}$ are tunable. 
 
 \section{Distillation Smearing}
 The computation of all-to-all quark propagators is crucial in LQCD calculations of correlation functions for a suitably large set of interpolators. This is computationally expensive as the number of ``solves'' of the lattice Dirac matrix grows \todo{how does it scale for all to all maybe romero paper}. By projecting quark fields into a subspace(with rank less than that of the original \todo{hilbert space/vector space?}), we can reliably compute all-to-all propagators\cite{peardon_novel_2009}. Within this reduced subspace, we can project operators onto definite momentum at both the source and sink. Hermiticity of operators is also guarunteed with this method, which bodes well for solving the GEVP within each irrep of interest. As scattering studies require well-controlled momentum insertions, this will serve us well at later stages of the $T_cc(3875)$ analysis.  
