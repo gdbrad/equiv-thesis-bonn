@@ -6,17 +6,25 @@
 %==============================================================================
 % \newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
 \section{Background}
-We first provide a brief overview of continuum QCD how one can extract low-energy observables using lattice QCD. In the following section we describe the nature of the so-called signal-to-noise problem which plagues calculations in LQCD, most notably the extraction of hadronic observables. As the Euclidean time between operators increases, the signal-to-noise ratio degrades exponentially. It is standard practice to use quark field smearing algorithms to circumvent this problem and ultimately extract ground-state energies with better statistics. Next, we introduce the mature method of distillation \cite{peardon_novel_2009} and the improvements to the signal of correlation functions in contrast to traditional smearing techniques. This will spell out the theoretical basis for the proceeding chapter on the computational implementation of this method to ultimately compute mesonic correlation functions. 
+We first provide a brief overview of continuum QCD and how to extract low-energy observables using lattice QCD. In the following section we describe the nature of the so-called signal-to-noise problem which plagues calculations in LQCD, most notably the extraction of hadronic observables. As the Euclidean time between operators increases, the signal-to-noise ratio degrades exponentially. It is standard practice to use quark field smearing algorithms to circumvent this problem and ultimately extract ground-state energies with better statistics. Next, we introduce the mature method of distillation \cite{peardon_novel_2009} and the improvements to the signal of correlation functions in contrast to traditional smearing techniques. This will spell out the theoretical basis for the proceeding chapter on operator construction and the computational implementation of described methods to ultimately capture the mesonic and di-meson spectrum, setting the stage for exotic hadrons. 
 
 \section{Continuum QCD}
-QCD is the gauge theory of strong interactions with color $SU(3)$ as the underlying gauge group. The color degree of freedom was introduced into the quark model to satisfy the pauli princicple. The matter-fields in the theory are quarks (spin-$\frac{1}{2}$) fermions with six flavors and three possible colors (we don't detect these in experiment!). No quark has ever been observed as an asympotically-free state. We can write down the QCD Lagrangian from the fre-quark Lagrangian by applying the gauge principle with resepect to the group $SU(3)$. The fundamental objects are the quark fields 
-\begin{align}
-    q_{\alpha,f,A} \text{where} \alpha: 1,\dots,4 (\text{Dirac-spinor indices}), f: 1,\dots,6 (\text{flavor}), A: 1,2,3 \text{color}
-\end{align}
+QCD is the gauge theory of strong interactions with color $SU(3)$ as the underlying gauge group. The color degree of freedom was introduced into the quark model to satisfy the pauli princicple. The matter-fields in the theory are quarks (spin-$\frac{1}{2}$) fermions with six flavors and three possible colors (we don't detect these in experiment!). No quark has ever been observed as an asympotically-free state. During the 1970's, Gell-Mann\cite{Gell-Mann:1964ewy}and others \cite{PhysRevD.8.3633}\cite{PhysRevLett.31.494} tackled the question of exactly which symetry of the quark model should be gauged. The ``hidden'' color degree of freedom possessed by quarks is plausible since we only observe color-singlets in nature. Thus, the strong forces between quarks with color need be colorless. Therefore, We can write down the QCD Lagrangian from the free-quark Lagrangian by applying the gauge principle with respect to the color gauge group $SU(3)$. The fundamental objects are the quark fields  $q_{\alpha,A}^{(f)}$ where $\alpha: 1,\dots,4$ are the Dirac-spinor indices, $f: 1,\dots,6$ denotes the flavor, and  $A: 1,2,3$ specifies the \text{color} index in the fundamental representation. 
 The QCD Lagrangian is 
 \begin{align}
-    \mathcal{L}_{QCD} = \sum_{f=1}^{6} \sum_{a,b=1}^{3} \sum_{\alpha,\beta,\mu=0}^{3} (i(\gamma^\mu)_{\alpha\beta}(\mathcal{D}_{\mu;ab}) - m_f\delta_{\alpha\beta}\delta_{ab}) \psi_{\beta b}^{(f)} + \sum_{i=1}^{8}\sum_{\mu,\nu=0}^{3} -\frac{1}{4} G_{\mu\nu}^i G_i^{\mu\nu}
+    \mathcal{L}_{QCD} = \sum_{f=1}^{6} \sum_{a,b=1}^{3} \sum_{\alpha,\beta,\mu=0}^{3} \bar{q}_{\alpha a}^{(f)}(i(\gamma^\mu)_{\alpha \beta}(\mathcal{D}_{\mu;ab}) - m_f\delta_{\alpha \beta}\delta_{ab}) q_{\beta b}^{(f)} + \sum_{i=1}^{8}\sum_{\mu,\nu=0}^{3} -\frac{1}{4} G_{\mu\nu}^i G_i^{\mu\nu}
 \end{align}
+where $G_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu - ig[A_\mu,A_\nu]$ contains the gluons (gauge fields) $A_\mu = \sum_{a=1}^{8}A_\mu^a \lambda^a/2$ where $\lambda^a$ are the Gell-Mann matrices that index $1,\dots 8$ corresponding to the adjoint representation of $SU(3)$ . The covariant derivative $\mathcal D_\mu$ acts on the quark fields like so $\mathcal D_\mu q_k = (\partial_\mu - igA_\mu)q_k$ 
+$\mathcal{L}_{QCD}$ exhibits discrete symmetries charge conjugation, parity \todo{expand}
+
+\subsection{Path integral formulation of QCD}
+Wilson \cite{Wilson:1974sk} first introduced lattice gauge theory in 1974 where both space and time are discretized. The quantization of the gauge fields is done via a Wick rotation to Euclidean space $t\rightarrow i\tau$. The integration shown in  
+
+With modern computing architecture, we are able to study numberous observvables with the path-integral formalism coupled with the Monte Carlo random walk method  
+
+
+
+
 Integrating over Minkowski spacetime, we obtain the QCD action 
 \begin{align}
     S_{QCD} = \int d^4x \{\underbrace{-\frac{1}{4} \sum_{a=1}^{8}F_{\mu\nu}^a F^{a\mu\nu}}_{S_G[A]}+ \underbrace{\sum_{f}\sum_{i,j=1}^{3}\sum_{\alpha,\beta=1}^{4}\bar{q}_{i,a}^f(x)[i(\gamma^\mu)_{\alpha\beta}(\mathcal{D}_\mu)_{ij} - m_f\delta_{ij}\delta_{\alpha\beta}]q_{j,\beta}^f(x)}_{S_f[A,\bar{q},q]}\}
@@ -25,15 +33,17 @@ Integrating over Minkowski spacetime, we obtain the QCD action
 
 \section{Lattice QCD }
 
-QCD is defined as LQCD as the lattice spacing goes to 0; With infinite compute time we can exactly solve QCD under one assumption, which is that we are in the right phase of the theory. It needs to be emphasized that LQCD is \textbf{not} a model, rather, it is the only non-perturbative regularization scheme in the infared regime that is systematically improvable. This improvement manifests itself via the following properties of discretized spacetime, which are tightly coupled to high-performance computing architecture. The crucial feature of this discretized version of the continuum theory is gauge covariance, namely $m_{gluon} \rightarrow 0$, which is the only way the theory can remain renormalizable without adding new terms. 
+QCD is defined as LQCD as the lattice spacing goes to 0; With infinite compute time we can exactly solve QCD under one assumption, which is that we are in the right phase of the theory.  It needs to be emphasized that LQCD is \textbf{not} a model, rather, it is the only non-perturbative regularization scheme in the infared regime that is systematically improvable, meaning one can dial the input parameters. This improvement manifests itself via the following properties of discretized spacetime, which are tightly coupled to high-performance computing architecture. The crucial feature of this discretized version of the continuum theory is gauge covariance, namely $m_{gluon} \rightarrow 0$, which is the only way the theory can remain renormalizable without adding new terms. 
 \begin{itemize}
     \item Discretization scale ($a$) where there are no infinities at finite values of $a$
     \item Finite Volume 
     \item Unphysical quark mass, which allows us to extrapolate to the physical quark mass with effective field theory 
 \end{itemize}
 
-In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\chi$PT, etc. which will not be discussed in this work) to make predictions abot the standard model. Modern computing power allows us to perform these at the physical pion mass. \todo{add details from my Brown final project for better summary}
+Discretization of a continuum theory naturally lends itself well to being transcribed onto a computer. In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\chi$PT, etc. which will not be discussed in this work) to make predictions about the standard model. The tunable parameters of LQCD simulations are the coupling constant $\alpha_s$ and the quark masses modulo the top quark.  Modern computing power allows us to perform these at the physical pion mass. We will walk through lattice operator construction to create a diqaurk $[\bar{q}q]$ of any spin ($J \in \mathbb{Z}$) and parity $P$ with two quark fields and an insertion of the covariant derivative $\nabla$ with gamma strucutre $\Gamma$, the product of which determines the spin $J$.  
+
 \subsection{Discretization of the Fermion and Gauge Actions}
+
 
 \subsection{Wilson Fermion Action}
 
@@ -60,7 +70,7 @@ We employ 6-stout smearing \cite{stout} and add smear the quark fields using dis
 Each gauge link on the lattice has four neighboring staples. 
 Let $C_\mu(x)$ denote the weighted sum of the perpendicular staples which
 begin at lattice site $x$ and terminate at neighboring site 
-$x\!+\!\hat{\mu}$ \cite{stout}:
+$x\!+\!\hat{\mu}$, this formulation was introduced by \cite{stout}:
 
 \begin{eqnarray}
  C_\mu(x)&=&\sum_{\nu\neq \mu}\rho_{\mu\nu}\biggl(
@@ -89,12 +99,18 @@ We can work out these dimensions for ourselves; A distilled propagator stored on
 $ 2 * 8 *2 *4 *4 *10 * 10 * 16$ 
 with the dictionary 
 $$\text{} \text{complex} * \text{snk} * \text{src} * N \times N_{\sigma} * \text{tslice}$$
+\section{Contractions}
+At this point, we need to actually perform contractions to obtain the correlator. This is a sum over all of the spin and color permabulator indices with spin matrices and color tensors, thus creating colorless objects satisfying the gauge invariance of QCD. We analyze the Monte Carlo ensembles of correlation functions on a configuration by configuration basis. 
+\begin{align}
+    \label{ops_cc}
+    O=\sum_{i,j} A_{ij}  [(\bar u\Gamma_i c)( p^1_{i})(\bar d\Gamma_{j} c)(p^2_{i}) -  (\bar d \Gamma_i c)({ p^1_{i}})(\bar u\Gamma_{j} c)({ p^2_{i}}) ]\nonumber,
+    \end{align}
 
-At this point, we need to actually perform contractions to obtain the correlator 
+    where $\Gamma_{i/j}$ represents the appropriate Dirac structure and the momenta $p^1$ and $p^2$ add up to zero, as we will stay in the rest frame within this period. 
 $$C_M^{(2)}(t',t) = Tr[\Phi^B(t')\tau(t',t)\Phi^A(t)\tau(t,t')]$$ 
 where 
 $$\Phi^A_{\alpha\beta}(t) = V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \equiv V^{\dagger}(t)\mathcal{D}^A(t)V(t)S^A_{\alpha\beta}$$ 
 and 
 $$\tau_{\alpha\beta}(t',t) = V^{\dagger}(t')M_{\alpha\beta}^{-1}(t',t)V(t)$$ 
 is the perambulator, defined by the lattice representation of the Dirac operator, $M$. 
-See [https://arxiv.org/abs/0905.2160v1]. 
+

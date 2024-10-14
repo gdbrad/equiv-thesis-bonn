@@ -52,6 +52,7 @@ Distillation is costly initially both in storage and component construction. Thi
     \label{fig:alg_flow}
 \end{figure}
 \section{Algebraic Multigrid Methods in LQCD}
+Computing fundamental building blocks on the lattice, which will each be discussed in the proceeding sections, requires sophisticated hardware architecure. We use the \verb|Chroma| software stack from USQCD \cite{Edwards_2005} compiled with \verb|superbblas| support (required for computing the distilled objects of interest), and the multigrid solver from \verb|QUDA|. We run the HPC tasks on a single GPU node, as we found multi-node jobs are not compatible with our stack and the Jureca cluster at JSC. 
 
 \subsection{Eigenpairs/Distillation Basis Calculation}
 This is the first step in the calculation which is input data for the generation of elementals and perambulators. We use the \verb|Primme| eigensolver to obtain the eigenpairs(eigenvalues,eigenvectors) of the Hermitian Wilson-Dirac operator\cite{PRIMME}\cite{Frommer:2020ovr}. 
@@ -206,9 +207,30 @@ In order to perform spectroscopy calculations for a given ensemble, there exists
       ($(box_q3.north east) + (0.4, 0.1)$) -- ($(box_q3.south east) + (0.4, -0.1)$);  % right bracket
 
 \end{tikzpicture}
-where are $4N_v \times 4N_v$ matrices. A contraction must be carrried out for every gauge configuration (we use 200 in this study); On each configuration, every timeslice and time source is accessed ($N_t = 96$,  $#t_{src} = 24)$ 
+where are $4N_v \times 4N_v$ matrices. A contraction must be carrried out for every gauge configuration (we use 200 in this study); On each configuration, every timeslice and time source is accessed ($N_t = 96$,  $\#t_{src} = 24)$ 
 
-
+\todo{correct this for single node jobs}
+\begin{table}[!h]
+  \centering \footnotesize
+  \hspace*{-0.6cm}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multirow{2}{*}{$\beta$}  & \multirow{2}{*}{$m_{ud}$}   & \multirow{2}{*}{$m_{s}$}   & \multirow{2}{*}{$L^3 \times T$}  & \multirow{2}{*}{$N_\mathrm{cnfg}$} & \multicolumn{3}{c|}{Eigenvectors} & \multicolumn{4}{c|}{Perambulators} \\
+  & & & & & Time [s] & Nodes & Cost [kch] & Time [s] & Nodes & $N_\mathrm{srcs}$ & Cost [kch] \\
+  \hline \hline
+  $3.3$    & $-0.1233$  & $-0.057$  & $24^3\times64$  & 500  & 1190 & 1 & 21  & 42  & 2 & 8 & 11  \\ \hline
+  $3.7$    & $-0.0200$  & $-0.0$    & $32^3\times96$  & 200  & 4230 & 1 & 30  & 151 & 2 & 8 & 17  \\ 
+  $3.7$    & $-0.0220$  & $-0.0$    & $32^3\times96$  & 200  & 4230 & 1 & 30  & 151 & 2 & 8 & 17  \\ 
+  $3.7$    & $-0.0250$  & $-0.0$    & $40^3\times96$  & 200  & 8260 & 1 & 48  & 295 & 2 & 8 & 33  \\ \hline
+  $3.57$   & $-0.0380$  & $-0.007$  & $24^3\times64$  & 200  & 1190 & 1 & 8   & 42  & 2 & 8 & 4   \\ 
+  $3.57$   & $-0.0440$  & $-0.007$  & $32^3\times64$  & 200  & 2820 & 1 & 20  & 100 & 2 & 8 & 11  \\ 
+  $3.57$   & $-0.0483$  & $-0.007$  & $48^3\times64$  & 200  & 9520 & 1 & 67  & 340 & 2 & 8 & 38  \\ \hline
+  $3.3$    & $-0.1200$  & $-0.057$  & $16^3\times64$  & 500  & 360  & 1 & 5   & 12  & 2 & 8 & 3   \\ 
+  $3.3$    & $-0.1265$  & $-0.057$  & $24^3\times64$  & 500  & 1190 & 1 & 21  & 42  & 2 & 8 & 11  \\ \hline
+  \end{tabular}
+  \caption{Computer time requirements for measurements on the ensembles from Table~\ref{tab:ensembles}. The first row is based on the test runs we have made, while the following ones are based on the volume scaling of the problem.}
+  \label{tab:ensembles}
+  \end{table}
 
 
 
