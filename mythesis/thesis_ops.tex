@@ -34,6 +34,25 @@ Armed with the continuum version of operators, which are classified via charge c
     \overrightarrow{D_\mu}\psi(x) = \frac{1}{2a}(U_{x,\mu}\psi(x + \hat{\mu}) - U_{x-\hat{\mu},\mu}^\dagger\psi(x - \hat{\mu}))
 \end{align}
 
+\section{Meson operators at $\vec{p}=000$}
+We detail the operator construction for zero total momentun, continuum spin $J^P$ and spin component $m$. The ingredients are gauge-covariant derivatives(for local operators this is just $\mathbb{I}$), Dirac matrix $\Gamma$, and the distilled meson elementals and perambulators. We obtain the lattice interpolator from the general(continuum) operator by subducing into irreps of the octahedral group $O_h$, see \ref{sec:app}. In table 1 of \cite{Cheung_2017}, we have the following for the 0 total momentum states: 
+\begin{table}
+    \begin{tabular}{ccc}
+    $LG$ & $\Lambda^p$ & $J^p$ \\
+    \hline
+    $O_h$ & $T_1^+$ & $1^+$ \\
+    $O_h$ & $A_1^-$ & $0^-$ \\
+\end{tabular}
+Fermion-bilinear operators with continuum spin $J$ and momentum $\vec{p}$ are written like so \cite{Cheung_2017}
+    \begin{equation}
+    \mathcal{O}^{J,m}(\vec{p},t) = \sum_{\vec{x}} e^{i\vec{p}\vec{x}} \bar{q}(\vec{x},t) [\Gamma \overleftrightarrow{D}\dots \overleftrightarrow{D}]^{J,m}q(\vec{x},t)
+\end{equation}
+In the most general form,
+
+\begin{equation}
+    \mathcal{O}_{\Lambda,\mu}^P(\vec{p}=\vec{0},t) = \sum_{\mu_1,\mu_2,\hat{q}} \mathbb{C}(\vec{p} = \vec{0},\Lambda^P,\mu;\vec{q},\Lambda_1,\mu_1;-\vec{q},\Lambda_2,\mu_2) \Omega^{M_1}_{\Lambda_1,\mu_1}(\vec{q},t) \Omega^{M_2}_{\Lambda_2,\mu_2}(-\vec{q},t)
+\end{equation}
+
 \section{Local meson operators}
 
 As local signifies that the source and sink operators are inserted on the same
@@ -143,7 +162,9 @@ $\gamma_4\gamma_5\mathbb{E}^i$
 
 Following the CG construction of \cite{Basak_2005}
 
-\section{Mesons in flight}
+\section{Mesons in flight ($\vec{p}\neq 000$)}
+
+At non-zero momentum, $O_h$ is broken down to the little groups of Dicyclic nature, eg. $DiC_2, DiC_4$. The extra ingredient required, in contrast to the zero momentum operators, are subduction coefficients that define the helicity operators. For these, we use the Wigner D-matrices then subduce into the irreps of the little group corresponding to the little group of the total momentum $\vec{P}$. 
 
 \section{Meson-Meson Interpolators}
 The global $SU(3)$ color symmetry requires that the minimal irreducible color singlet systems can only be $q\bar{q}$, $qqq$, $gg$, $q\bar{q}g$ etc. which implies that multi-quark systems can only exist as molecular configurations if there are no other binding mechanisms. Moreover, as a consequence of the $SU(3)^C$ coupling rule, the state $QQ\bar{q}\bar{q}$ has dimeson configuration as well as diquark-antidiquark configuration. 
