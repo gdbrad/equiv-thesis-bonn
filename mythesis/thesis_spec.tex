@@ -86,6 +86,36 @@ So we can deduce the scaling
     a \rightarrow \frac{1}{2}a \equiv 64 \times \text{orig} \quad t_{cpu}
 \end{align} 
 where the coarse graining of the lattice spacing $a$ is necessary in order to recover the continuum theory. With this formualtion in hand, we can explicitly form the lattice gauge theory. 
+Let 
+\begin{align}
+    S = \int d^4x \mathcal{L}(x) \\
+    S_{LQCD} = \sum_{nm}^{} a^{n-4}\alpha_s^m S_{n,m} 
+\end{align} where $n\geq4,m\geq0$. This is an expansion abotu the continuum limit, the first term in the expansion is exactly QCD. The remaining terms are the discretization effects resulting from the theory being transcribed in a finite box with boundary conditions. If we extrapoalte to 0, we exactly recover the continuum theory of QCD. 
+It needs to be emphasized that LQCD is \textbf{not} a model, rather, it is the only non-perturbative regularization scheme in the infared regime that is systematically improvable, meaning one can dial the input parameters. This improvement manifests itself via the following properties of discretized spacetime, which are tightly coupled to high-performance computing architecture. The crucial feature of this discretized version of the continuum theory is gauge covariance, namely $m_{gluon} \rightarrow 0$, which is the only way the theory can remain renormalizable without adding new terms.  
+\begin{itemize}
+    \item Discretization scale ($a$) where there are no infinities at finite values of $a$
+    \item Finite Volume 
+    \item Unphysical quark mass, which allows us to extrapolate to the physical quark mass with effective field theory 
+\end{itemize}
+
+
+Discretization of a continuum theory naturally lends itself well to being transcribed onto a computer. In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\chi$PT, etc. which will not be discussed in this work) to make predictions about the standard model. The tunable parameters of LQCD simulations are the coupling constant $\alpha_s$ and the quark masses modulo the top quark.  Modern computing power allows us to perform these at the physical pion mass. 
+\subsection{Discretization of the Fermion and Gauge Actions}
+Using results from general field theory, we can write down the following relation 
+\begin{align}
+    \braket{0|T{\hat{\phi}_N(x_N)\dots \hat{\phi}_1}(x_1)|0} \equiv\frac{1}{Z} \int D\phi\phi(x_N)\phi_1(x_1)e^{i\int d^4x\mathcal{L}(\phi,\partial\phi)}
+\end{align}
+We can write down the partition function $Z = \int D\phi e^{iS}$. 
+The former is a time ordered-product of fields, which is hard to put on a computer but allows us to predict what we should see. The latter is composed of commuting numbers and an infinite dimensional integral over all gauge configurations, which we cannot naively calcualte on a computer. However, we know that a computer, with suitable hardware architecture, can handle all IR non-pertrubative physics.   
+
+We first need to discretize the hypercube into a grid with volume $N^4 = \text{number of sites}$ where $N$ is the spatial extent. Next, we perform a Wick rotation $t\rightarrow -i\tau$ to Euclidean spacetime so that the partition function becomes 
+\begin{align}
+    Z_{Eu.} = \int D\phi_{Eu.}\underbrace{e^{(-SE_u)}}_\text{Probability weight} 
+\end{align} 
+In order to find the most ``valuable'' configuration on our lattice, we must run a Monte Carlo simulation. This must satisify the Ergodic hypothesis; The simulation must be able to run in both directions in Monte Carlo time. Now we can generate an ensemble of $\phi^i$'s 
+\begin{equation}
+    {\phi_{Eu.}^i: i-1,\dots N} 
+\end{equation} that minimize the Euclidean action $S_{Eu.}$. Said another way, these are the trajectories that are as close to the classical action as possible; This is akin to how one can recover classical mechanics from quantum mechanics. 
 
 % Integrating over Minkowski spacetime, we obtain the QCD action 
 % \begin{align}
@@ -182,44 +212,48 @@ In summary, $S_{\text{LQCD}} = S_G + S_F$ , which must be dimensionless.
 
 Which substantiates the statement that QCD is defined as LQCD as the lattice spacing goes to 0; With infinite compute time we can exactly solve QCD under one assumption, which is that we are in the right phase of the theory. Well, we cannot take $a\rightarrow 0$ as we are bound by classical compute architecture and finite time. However, we can let the lattice spacing $a \gg \text{any interesting scale in QCD}$ which implies the relation $\frac{1}{a} \gg \Lambda_{QCD}$. 
 
-
-% ---------------move this ------------------------------------
-Let 
+\section{Two-Point Euclidean Correlation Functions}
+A correlator of two Hilbert-space operators $\phi,\phi^\dagger$ is written as 
+\begin{equation}
+    \braket{0|T\{\phi(y)\phi^{\dagger}(x)\}|0} \\
+\end{equation}and we can insert a complete set of states $1 = \sum_{n}^{} |n\times n|$.
+\begin{equation}
+    \sum_{n}^{} \braket{0|e^{Hy_0}\phi(0,\vec{y})e^{-Hy_n} | n \times n | e^{Hx_0}\phi^{\dagger}(0,\vec{x})e^{-Hx_n}|0} \\
+\end{equation} At definite momentum,
+\begin{equation}
+    C(\tau,\vec{p}_f,x) = \sum_{n}^{} \underbrace{\sum_{y}^{} e^{i\vec{p_f}\vec{y}}}_{Z_{n\vec{p}}} Z_{yn}Z_{xn}^\dagger e^{-E_n(\underbrace{y_0-x_0}_{-it \to \tau})}    
+\end{equation}
+It is worth noting that both the fourier transform of $x,y$ need not be computed; If you performed both, this reulsts in $N_L^3$ additional computational cost. 
+At zero momentum, 
+\begin{equation}
+    C(\tau,\vec{p}_f=0,x) = \sum_{n}^{} Z_{n0}Z_{nx}^\dagger e^{-m_n\tau} 
+\end{equation} 
+We can pick off the spectrum by taking the long-time limit: 
 \begin{align}
-    S = \int d^4x \mathcal{L}(x) \\
-    S_{LQCD} = \sum_{nm}^{} a^{n-4}\alpha_s^m S_{n,m} 
-\end{align} where $n\geq4,m\geq0$. This is an expansion abotu the continuum limit, the first term in the expansion is exactly QCD. The remaining terms are the discretization effects resulting from the theory being transcribed in a finite box with boundary conditions. If we extrapoalte to 0, we exactly recover the continuum theory of QCD. 
-It needs to be emphasized that LQCD is \textbf{not} a model, rather, it is the only non-perturbative regularization scheme in the infared regime that is systematically improvable, meaning one can dial the input parameters. This improvement manifests itself via the following properties of discretized spacetime, which are tightly coupled to high-performance computing architecture. The crucial feature of this discretized version of the continuum theory is gauge covariance, namely $m_{gluon} \rightarrow 0$, which is the only way the theory can remain renormalizable without adding new terms.  
+    & \lim_{\tau \to \infty}C(\tau,\vec{0},x) = Z_{0\vec{x}}Z_{0\vec{x}}^\dagger Z_{n\vec{p}}  \\
+    & Z_{n\vec{p}} = \sum_{\vec{y}}^{} e^{i\vec{p}\vec{y}}\braket{0|\phi(0,\vec{y})|n} \\ 
+
+    & \lim_{\tau \to \infty}C(\tau,\vec{0},x) = Z_{0\vec{x}}Z_{0\vec{x}}^\dagger Z_{n\vec{p}}e^{-m_0\tau}(1+ \delta Z_{10}\delta Z_{1x}^\dagger e^{-\delta m_{10}\tau} + \dots \text{H.O.C})  
+\end{align}
+Now the correlator can be fit with a decaying exponential using Bayesian methods to extract the ground state energy and the variational method to extract excited state properties which use multi-exponential fit functions. 
+\begin{equation}
+    C_{ij}(\tau,\vec{p},\vec{x}) = \sum_{\vec{n}}^{} e^{-E_n\tau} Z_{n\vec{p}}^{(i)} Z_{n\vec{x}}^{\dagger(j)}
+\end{equation}
+
+\subsection{Summary of LQCD Formalism}
+In a nutshell, we have 
 \begin{itemize}
-    \item Discretization scale ($a$) where there are no infinities at finite values of $a$
-    \item Finite Volume 
-    \item Unphysical quark mass, which allows us to extrapolate to the physical quark mass with effective field theory 
+    \item Replaced continuous spacetime by a 4D Euclidean lattice with a constant lattice spacing $a$. The DOF are classical field variables $\phi$ living on the lattice.
+    \item Construct the Euclidean action $S_{EU}[\phi]$ of the discretized system such that $\lim_{a \to 0}$ of the Euclidean continuum action is obtained with the Boltzmann factor weight $e^{-S_{EU}[\phi]}$ 
+    \item Operators in the Euclidean correlator of interst translate to functionals by replacing field operators with classical latice field variables 
+    \item Compute Euclidean correlation functions by evaluating these functionsals on some lattice gauge field configuration weighted with the Boltzman factor and integrated over all possible field configurations.
 \end{itemize}
 
-
-Discretization of a continuum theory naturally lends itself well to being transcribed onto a computer. In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\chi$PT, etc. which will not be discussed in this work) to make predictions about the standard model. The tunable parameters of LQCD simulations are the coupling constant $\alpha_s$ and the quark masses modulo the top quark.  Modern computing power allows us to perform these at the physical pion mass. 
-\subsection{Discretization of the Fermion and Gauge Actions}
-Using results from general field theory, we can write down the following relation 
-\begin{align}
-    \braket{0|T{\hat{\phi}_N(x_N)\dots \hat{\phi}_1}(x_1)|0} \equiv\frac{1}{Z} \int D\phi\phi(x_N)\phi_1(x_1)e^{i\int d^4x\mathcal{L}(\phi,\partial\phi)}
-\end{align}
-We can write down the partition function $Z = \int D\phi e^{iS}$. 
-The former is a time ordered-product of fields, which is hard to put on a computer but allows us to predict what we should see. The latter is composed of commuting numbers and an infinite dimensional integral over all gauge configurations, which we cannot naively calcualte on a computer. However, we know that a computer, with suitable hardware architecture, can handle all IR non-pertrubative physics.   
-
-We first need to discretize the hypercube into a grid with volume $N^4 = \text{number of sites}$ where $N$ is the spatial extent. Next, we perform a Wick rotation $t\rightarrow -i\tau$ to Euclidean spacetime so that the partition function becomes 
-\begin{align}
-    Z_{Eu.} = \int D\phi_{Eu.}\underbrace{e^{(-SE_u)}}_\text{Probability weight} 
-\end{align} 
-In order to find the most ``valuable'' configuration on our lattice, we must run a Monte Carlo simulation. This must satisify the Ergodic hypothesis; The simulation must be able to run in both directions in Monte Carlo time. Now we can generate an ensemble of $\phi^i$'s 
-\begin{equation}
-    {\phi_{Eu.}^i: i-1,\dots N} 
-\end{equation} that minimize the Euclidean action $S_{Eu.}$. Said another way, these are the trajectories that are as close to the classical action as possible; This is akin to how one can recover classical mechanics from quantum mechanics. 
-% ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 \section{Gauge Field Smearing}
-Gauge links, the edges on the lattice connecting the vertices(quark sites), are the discretized version of gluons in the continuum theory of QCD. They are known to introduce noise in the form of short range fluctuations. To circumvent this, different types of ``smearing'' are typically applied during the generation of ensembles. 
+Gauge links, the edges on the lattice connecting the vertices(quark sites), are the discretized version of gluons in the continuum theory of QCD. They are known to introduce noise in the form of short range fluctuations. To circumvent this, different types of ``smearing'' are typically applied during the generation of ensembles. In order to achieve overlap with states of interest in the continuum, namely the low-lying eigenstates, one must being with smearing of the quark fields via some smoothing function. A brief exposition of \textit{Jacobi smearing} will follow to motivate our implementation of \textit{distillation smearing}.
 
-In order to achieve overlap with states of interest in the continuum, namely the low-lying states, one must being with smearing of the quark fields via some smoothing function. A brief exposition of \textit{Jacobi smearing} will follow. 
+It is advantageous in LQCD calculations to first ``smear out'' the high-energy modes from the fermion fields at each time-slice. This will make the extraction of the energy spectra realizable at earlier times, since if the high-energy modes were still present, the asympotic behavior of the correlator would not manifest until much later. 
+Both the link variables(gluons) $\tilde{U}_j(x)$ and quark fields $\tilde{\psi}(x)$ are spatially-smoothed. The temporal link variables are not smoothed. For each quark flavor, the quark field is smoothed with the operator
 \begin{equation}
     \tilde{\psi}_{a\alpha}(x) = \mathcal{S}_{ab}(x,y) \psi_{b\alpha}(y)
 \end{equation}
@@ -229,10 +263,13 @@ This construction is derived from the ``parent'' representation of a gauge-invar
 \begin{align}
     \tilde{\Psi}(\vec{x},t) = \sum_{\vec{y}} L(\vec{x},\vec{y})\psi(\vec{y},t)
 \end{align}
-Define the jacobi smearing operator as \todo{prob dont need this}
-\begin{align}
-\nabla
-\end{align}
+
+
+The simplest smearing operator is a gauge-covariant Laplacian, called the Jacobi operator \cite{peardon_novel_2009} 
+\begin{equation}
+    J_{\sigma,n_\sigma}(t) = \left(1 + \frac{\sigma\nabla^2(t)}{n_\sigma}^{n_\sigma}\right)
+\end{equation}
+
 We employ 6-stout smearing \cite{stout} and add smear the quark fields using distillation in the proceeding phase of the computational chain. \cite{peardon_novel_2009}. Here we briefly describe stout smearing and arrive at the definition of a stout link. 
 
 \subsection{Stout Smearing}

@@ -33,7 +33,23 @@ $(\bar{\psi}^{f_1}(n)\Gamma\psi^{f_2}(n))^{\dagger} = \pm \bar{\psi}^{f_2} \Gamm
 which can be derived from the fact that the interchange of grassmann variables induces a minus sign and the $\gamma_4$ appears via the relation $\bar{\psi} = \psi^{\dagger}\gamma_4$
 TLDR; the conjugate interpolator is obtained by interchanging the $\psi$ and $\bar{\psi}$ and ordering the barred quark fields to the left. 
 
-Now we actually have to evaluate the correlators by employing the property that the fermionic expectation value factorizes with respect to the flavors. We then apply wick's theorem for each of the two flavors, this is **fermion contraction** , by which we obtain the dirac operators. In this case, **only grassmann variables with equal flavor can be contracted with eachother** 
+Now we actually have to evaluate the correlators by employing the property that the fermionic expectation value factorizes with respect to the flavors. We then apply wick's theorem for each of the two flavors, this is fermion contraction , by which we obtain the dirac operators. In this case, only grassmann variables with equal flavor can be contracted with eachother
+
+\section{Pion correlator} 
+iven an operator with pion quantum numbers, such as
+\[
+\phi_L(x) = \bar{d}(x)\gamma_5u(x)
+\]
+or some smeared version of this, denoted $\phi_S(x)$,
+the dimensionless correlator from Euclidean time $t_i$ to Euclidean time $t_f$
+with momentum $\vec p$ is
+\begin{eqnarray}
+\Gamma^{\pi\pi}_{AB}(t_i,t_f,\vec{p})
+ &=& a^6\sum_{{\vec x}_f}e^{-i(\vec{x}_f-\vec{x}_i)\cdot\vec{p}}
+     \left<0\left|\phi_B(x_f)\phi_A^\dagger(x_i)\right|0\right> \nonumber \\
+
+\end{eqnarray}
+
 
 \section{Mesonic Signal Saturation}
 
