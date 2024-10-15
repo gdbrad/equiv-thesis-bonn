@@ -101,6 +101,8 @@ It needs to be emphasized that LQCD is \textbf{not} a model, rather, it is the o
 
 Discretization of a continuum theory naturally lends itself well to being transcribed onto a computer. In essence, we perform LQCD calculations on some HPC cluster, encode known properties of QCD into some EFT (eg. Chiral perturbation theory, Baryon $\chi$PT, etc. which will not be discussed in this work) to make predictions about the standard model. The tunable parameters of LQCD simulations are the coupling constant $\alpha_s$ and the quark masses modulo the top quark.  Modern computing power allows us to perform these at the physical pion mass. 
 \subsection{Discretization of the Fermion and Gauge Actions}
+Wilson's goal was to quantize a gauge field theory on a discrete lattice in Euclidean space-time while preserving exact gauge invariance \cite{Wilson:1974sk}. The expansion about the strong coupling constant requires summing over all possible quark paths and all surfaces that join these paths.  
+
 Using results from general field theory, we can write down the following relation 
 \begin{align}
     \braket{0|T{\hat{\phi}_N(x_N)\dots \hat{\phi}_1}(x_1)|0} \equiv\frac{1}{Z} \int D\phi\phi(x_N)\phi_1(x_1)e^{i\int d^4x\mathcal{L}(\phi,\partial\phi)}
@@ -121,8 +123,8 @@ In order to find the most ``valuable'' configuration on our lattice, we must run
 % \begin{align}
 %     S_{QCD} = \int d^4x \{\underbrace{-\frac{1}{4} \sum_{a=1}^{8}F_{\mu\nu}^a F^{a\mu\nu}}_{S_G[A]}+ \underbrace{\sum_{f}\sum_{i,j=1}^{3}\sum_{\alpha,\beta=1}^{4}\bar{q}_{i,a}^f(x)[i(\gamma^\mu)_{\alpha\beta}(\mathcal{D}_\mu)_{ij} - m_f\delta_{ij}\delta_{\alpha\beta}]q_{j,\beta}^f(x)}_{S_f[A,\bar{q},q]}\}
 % \end{align}
-\section{Wilson's QCD action on the Lattice }
-Fermion fields live at every lattice site $n$ $\phi(x) \rightarrow \phi_n$; We connect these fermions with oriented link variables(direction matters!) in order to retain gauge invariance. 
+\section{Wilson's Lattice Quantization of Gauge Fields }
+In this section we capture how Wilson defined the space-time integral of the QCD Lagrangian on a discrete lattice in Euclidean space-time. Put simply, the derivatives present in the continuum action are substituted with finite-differences and the integral over space-time is replaced with a sum over lattice sites. The action must be gauge invariant for any lattice spacing $a$. Fermion fields live at every lattice site $n$ $\phi(x) \rightarrow \phi_n$; We connect these fermions with oriented link variables(direction matters!) in order to retain gauge invariance. 
 \begin{center}
     \begin{tikzpicture}
         \draw[->, thick] (0,0) -- (4,0);
@@ -148,7 +150,7 @@ Fermion fields live at every lattice site $n$ $\phi(x) \rightarrow \phi_n$; We c
     \end{center}
 
     
-The plaquette, $U_{\mu\nu}(x)$ is an oriented square. The trace of  $U_{\mu\nu}(x)$ is a gauge-invariant object  
+The fundamental square of a hypercubic lattice is the plaquette, $U_{\mu\nu}(x)$ is an oriented square. The trace of  $U_{\mu\nu}(x)$ is a gauge-invariant object, thereby allowing the gauge-field piece of the action in lattice units  
 \begin{equation}
     U_{\mu\nu}(x) = \text{Tr} \left[ U_\mu(x) U_\nu(x + \hat{\mu}) U_\mu^\dagger(x + \hat{\nu}) U_\nu^\dagger(x) \right]
 \end{equation}
@@ -232,8 +234,7 @@ We can pick off the spectrum by taking the long-time limit:
 \begin{align}
     & \lim_{\tau \to \infty}C(\tau,\vec{0},x) = Z_{0\vec{x}}Z_{0\vec{x}}^\dagger Z_{n\vec{p}}  \\
     & Z_{n\vec{p}} = \sum_{\vec{y}}^{} e^{i\vec{p}\vec{y}}\braket{0|\phi(0,\vec{y})|n} \\ 
-
-    & \lim_{\tau \to \infty}C(\tau,\vec{0},x) = Z_{0\vec{x}}Z_{0\vec{x}}^\dagger Z_{n\vec{p}}e^{-m_0\tau}(1+ \delta Z_{10}\delta Z_{1x}^\dagger e^{-\delta m_{10}\tau} + \dots \text{H.O.C})  
+    & \lim_{\tau \to \infty}C(\tau,\vec{0},x) = Z_{0\vec{x}}Z_{0\vec{x}}^\dagger Z_{n\vec{p}}e^{-m_0\tau}(1+ \delta Z_{10}\delta Z_{1x}^\dagger e^{-\delta m_{10}\tau} + \dots \text{H.O.C})  \\
 \end{align}
 Now the correlator can be fit with a decaying exponential using Bayesian methods to extract the ground state energy and the variational method to extract excited state properties which use multi-exponential fit functions. 
 \begin{equation}
@@ -273,11 +274,11 @@ The simplest smearing operator is a gauge-covariant Laplacian, called the Jacobi
     J_{\sigma,n_\sigma}(t) = \left(1 + \frac{\sigma\nabla^2(t)}{n_\sigma}^{n_\sigma}\right)
 \end{equation} where $\nabla^2$ is 
 \begin{equation}
-    
+    \todo{}
 \end{equation}
 The resulting smeared field is then 
 \begin{equation}
-    
+    \todo{}
 \end{equation}
 
 We employ 6-stout smearing \cite{stout} and add smear the quark fields using distillation in the proceeding phase of the computational chain. \cite{peardon_novel_2009}. Here we briefly describe stout smearing and arrive at the definition of a stout link. 
