@@ -239,6 +239,11 @@ Now the correlator can be fit with a decaying exponential using Bayesian methods
 \begin{equation}
     C_{ij}(\tau,\vec{p},\vec{x}) = \sum_{\vec{n}}^{} e^{-E_n\tau} Z_{n\vec{p}}^{(i)} Z_{n\vec{x}}^{\dagger(j)}
 \end{equation}
+Given the exhaustive derivation above, for the remainder of this work, we simplify the notation and write the correlation function between a basis of creation and annihilation operators at time $0,t$ as \cite{Dudek_2010}
+\begin{align}
+    &C_ij(t) = \braket{0|\mathcal{O_i}(t)\mathcal{O_j}(0)|0} \\
+    &= \sum_{n}^{} \frac{1}{2E_n}\braket{0|\mathcal{O}_i|n}\braket{n|\mathcal{O_j}|0}e^{-e_NT}    
+\end{align}
 
 \subsection{Summary of LQCD Formalism}
 In a nutshell, we have 
@@ -259,15 +264,20 @@ Both the link variables(gluons) $\tilde{U}_j(x)$ and quark fields $\tilde{\psi}(
 \end{equation}
 Here, $x,y$ are lattice sites, $a,b$ are color indices, $\alpha$ a spin component. 
 
-This construction is derived from the ``parent'' representation of a gauge-invariant, spatially symmetric operation, which serves as a means of improving the projection onto low-lying states in correlation functions:
 \begin{align}
     \tilde{\Psi}(\vec{x},t) = \sum_{\vec{y}} L(\vec{x},\vec{y})\psi(\vec{y},t)
 \end{align}
 
-
 The simplest smearing operator is a gauge-covariant Laplacian, called the Jacobi operator \cite{peardon_novel_2009} 
 \begin{equation}
     J_{\sigma,n_\sigma}(t) = \left(1 + \frac{\sigma\nabla^2(t)}{n_\sigma}^{n_\sigma}\right)
+\end{equation} where $\nabla^2$ is 
+\begin{equation}
+    
+\end{equation}
+The resulting smeared field is then 
+\begin{equation}
+    
 \end{equation}
 
 We employ 6-stout smearing \cite{stout} and add smear the quark fields using distillation in the proceeding phase of the computational chain. \cite{peardon_novel_2009}. Here we briefly describe stout smearing and arrive at the definition of a stout link. 
