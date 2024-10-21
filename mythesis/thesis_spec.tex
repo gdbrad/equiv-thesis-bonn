@@ -75,7 +75,7 @@ which illuminates the large computational cost required of sparse matrix inversi
    \underbrace{\psi(x)}_{field} = 32^3 \times 96 \times \underbrace{3}_{color} \times \underbrace{4}_{spin} = 12 \times 3145728 \text{sites} 
 \end{align}
 The modus operandi is thus to manipulate matrices of this size with the computer. 
-As a brief forary into the computational considerations, which will be further hashed out in \ref{sec:comp}, consider the compute time of an matrix inversion: 
+As a brief forary into the computational considerations, which will be further hashed out in the next chapter, consider the compute time of an matrix inversion: 
 \begin{align}
     t_{cpu}(D^{-1} = \frac{\lambda_{max}}{\lambda_{min}}) \quad \text{(eigenvalues)} \\ 
     \lambda_{QCD}[D] \sim m_{u,d} \qquad ; m_{u,d} \ll \Lambda_{QCD} \ll \frac{1}{a} \\
@@ -272,15 +272,12 @@ Here, $x,y$ are lattice sites, $a,b$ are color indices, $\alpha$ a spin componen
 The simplest smearing operator is a gauge-covariant Laplacian, called the Jacobi operator \cite{peardon_novel_2009} 
 \begin{equation}
     J_{\sigma,n_\sigma}(t) = \left(1 + \frac{\sigma\nabla^2(t)}{n_\sigma}^{n_\sigma}\right)
-\end{equation} where $\nabla^2$ is 
-\begin{equation}
-    \todo{}
+\end{equation} where $\nabla^2$ is \cite{10.5555/3029317}
+\begin{equation}\label{eq:laplace}
+    \nabla^2(a,b;t) =  -6\delta_{a,b} + \sum_{k=1}^{3} \left(U_k(a,t)\delta_{a+\hat{k},b} + U_k^{\dagger}(a,t)\delta_{a-\hat{k},b}\right)
 \end{equation}
-The resulting smeared field is then 
-\begin{equation}
-    \todo{}
-\end{equation}
-
+where $\sigma$ is a free parameter. 
+By using this smearing operator, we can perform all-to-all quark propgation measurements. This construction is called distillation, which we will revisit in the next section.  
 We employ 6-stout smearing \cite{stout} and add smear the quark fields using distillation in the proceeding phase of the computational chain. \cite{peardon_novel_2009}. Here we briefly describe stout smearing and arrive at the definition of a stout link. 
 
 \subsection{Stout Smearing}
@@ -300,7 +297,11 @@ $x\!+\!\hat{\mu}$, this formulation was introduced by \cite{stout}:
 This is the formulation of a plaquette, where the magnitude of the vectors $\hat{u}, \hat{V}$ is the length of a single lattice spacing (given by the particular ensemble) and the weights $\rho_{\mu\nu}$ are tunable. 
 
 \section{Distillation Smearing}
-The computation of all-to-all quark propagators is crucial in LQCD calculations of correlation functions for a suitably large set of interpolators. This is computationally expensive as the number of ``solves'' of the lattice Dirac matrix grows \todo{how does it scale for all to all maybe romero paper}. By projecting quark fields into a subspace(with rank less than that of the original \todo{hilbert space/vector space?}), we can reliably compute all-to-all propagators\cite{peardon_novel_2009}. Within this reduced subspace, we can project operators onto definite momentum at both the source and sink. Hermiticity of operators is also guarunteed with this method, which bodes well for solving the GEVP within each irrep of interest. As scattering studies require well-controlled momentum insertions, this will serve us well at later stages of the $T_cc(3875)$ analysis.  
+The computation of all-to-all quark propagators is crucial in LQCD calculations of correlation functions for a suitably large set of interpolators. This is computationally expensive as the number of ``solves'' of the lattice Dirac matrix scales with the spatial and temporal extent of the lattice. By projecting quark fields into a subspace with rank less than that of the original vector space of fields on a time-slice, we can reliably compute all-to-all propagators\cite{peardon_novel_2009}. Within this reduced subspace, we can project operators onto definite momentum at both the source and sink. Hermiticity of operators is also guarunteed with this method, which bodes well for solving the GEVP within each irrep of interest. As scattering studies require well-controlled momentum insertions, this will serve us well at later stages of the $T_cc(3875)$ analysis.  
+The first order of business it to solve for the first $N_D$ eigenvectors with smallest eigenvalues of the gauge-covariant Laplacian \ref{eq:laplace} such that 
+\begin{equation}\label{eq:eigs}
+    -\nabla^2V = VD
+\end{equation} 
 
 The information we need to extract is 
 $$ V^{\dagger}M^{-1}V \rightarrow \tau $$ 
@@ -311,11 +312,16 @@ $$ V^{(i,\alpha)}(t)_{\vec{x},t',\beta} = v_i(t)_{\vec{x}} \delta_{tt'}\delta_{\
 
 Propagators transform with tensor product structure 
 $$\text{Lattice} \otimes \text{Matrix(Nc)} \otimes \text{Matrix(Ns)} \otimes \text{Complex}$$
-\textbf{check this and format with a figure from the TALK AT NRW FAIR }
 We can work out these dimensions for ourselves; A distilled propagator stored on disk has dimensions 
-$ 2 * 8 *2 *4 *4 *10 * 10 * 16$ 
+\begin{equation}
+ 2 * 8 * 2 * 4 * 4 * 10 * 10 * 16 
+\end{equation}
 with the dictionary 
-$$\text{} \text{complex} * \text{snk} * \text{src} * N \times N_{\sigma} * \text{tslice}$$
+\begin{equation}
+ \text{} \text{complex} * \text{snk} * \text{src} * N \times N_{\sigma} * \text{tslice}
+\end{equation}
+In the next section covering the computational aspects of this project, we will delve slightly deeper into how this is accomplished with HPC and the \texttt{Chroma} software stack.
+
 \section{Contractions}
 At this point, we need to actually perform contractions to obtain the correlator. This is a sum over all of the spin and color permabulator indices with spin matrices and color tensors, thus creating colorless objects satisfying the gauge invariance of QCD. We analyze the Monte Carlo ensembles of correlation functions on a configuration by configuration basis. 
 \begin{align}
@@ -329,5 +335,5 @@ where
 $$\Phi^A_{\alpha\beta}(t) = V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \equiv V^{\dagger}(t)\mathcal{D}^A(t)V(t)S^A_{\alpha\beta}$$ is the elemental building block  
 and 
 $$\tau_{\alpha\beta}(t',t) = V^{\dagger}(t')M_{\alpha\beta}^{-1}(t',t)V(t)$$ 
-is the perambulator, defined by the lattice representation of the Dirac operator, $M$. 
+is the perambulator, defined by the lattice representation of the Dirac operator, $M$. This defines the distilled ``version'' of a quark propagator connected distillation spaces on two time slices $t,t'$.  
 

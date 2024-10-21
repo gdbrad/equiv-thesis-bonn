@@ -6,7 +6,7 @@
 The amount of compute time for generating the eigenbasis, and subsequently the perambulators and meson elementals, scales with the spatial extent of the lattice $N$ and the rank of the distillation basis $n$. We provide an overview of our lattice setup and a summary of the Hybrid Monte Carlo method for generating gauge configurations. Next, we present the software stack and pipeline for our calculations on the Jureca cluster, including the storage and runtime cost associated with each object necessary for performing hadron spectroscopy with distillation. As this framework hinges upon algebraic mulitigrid methods, we touch on the key points and how this technology interfaces with \texttt{Chroma} lattice objects. At the final stage, matrix elements(meson elementals) and perambulators are contracted together with some appropiate Dirac strucutre depending on the flavor and isospin channel (the $J^{PC}$ continuum quantum numbers to be accessed), which we elucidate diagramatically. The details of our 6-stout smeared ensembles are given for completion. Having a wide range of pion masses and lattice spacings to study will allow us to probe the quark mass dependence of the exotic doubly charmed tetraquark state $T_{cc}^+$.   
 
 \section{Lattice Setup}
-The only known \textit{ab-initio} approach to probing the low energy regime of QCD is with High Performance Computing(HPC) and the discretized lattice from . At bottom, a path-integral approach is used to compute some observable $\mathcal{O}$ with a predefined collection of bare physics and lattice parameters$\{\beta,am_{ud},am_s\}$. From \ref{sec:spec}, we know the lattice path integral is:
+The only known \textit{ab-initio} approach to probing the low energy regime of QCD is with High Performance Computing(HPC) and the discretized lattice from . At bottom, a path-integral approach is used to compute some observable $\mathcal{O}$ with a predefined collection of bare physics and lattice parameters$\{\beta,am_{ud},am_s\}$. From \todo{fix crossref to spec}, we know the lattice path integral is:
 \begin{align}
   Z = \int [DU] \text{exp}\left[-S[U]\right] \quad \text{where} \quad  DU = \prod_{x,\mu}^{} dU_{\mu x}
 \end{align} where one can add in the dependence on the bare physics and lattice parameters like so: 
@@ -17,11 +17,12 @@ The only known \textit{ab-initio} approach to probing the low energy regime of Q
 In  we showed how the discretization of the euclidean path integral reduces the infinite number of integrals to something more manageable. However, the number of lattice sites on a typical lattice is $\approx32^4$, so a ``brute-force'' approach is not feasible. See \cite{Montvay_Münster_1994}, \cite{Luscher:2010ae},\cite{Creutz:1988wv} \cite{Finkenrath:2023sjg} for more details. To make the problem tractable, we turn to Markov Chain Monte Carlo simulations to calculate the expectation value and correlation functions of observables 
 \begin{equation}
   \left<\mathcal{O}\right> = \frac{1}{N} \sum_{q,\bar{q},U}^{} \mathcal{O}\left[q,\bar{q},U\right] 
-\end{equation} where $\left[q,\bar{q},U\right] \approx \text{exp}(-S[q,\bar{q},U])$. The latter is the probability weight that we use to perform importance sampling of the gauge field configurations. This is necessary because only a small vicinity of the minimum of the spectral density will contribute. Moreover, The Boltzmann factor $\text{exp}(-S[\phi])$ dictates the distribution of configurations in the sample produced by the Monte Carlo integration. This process is comprised of two steps: 
+\end{equation} where $\left[q,\bar{q},U\right] \approx \text{exp}(-S[q,\bar{q},U])$. The latter is the probability weight that we use to perform importance sampling of the gauge field configurations. This is necessary because only a small vicinity of the minimum of the spectral density will contribute. Moreover, The Boltzmann factor $\text{exp}(-S[\phi])$ dictates the distribution of configurations in the sample produced by the Monte Carlo integration. This process is comprised of two steps \cite{Luscher:2010ae}: 
 \begin{itemize}
-  \item Proposal: 
-  \item Correction or Updating: 
+  \item Proposal: a new gauge configuration $U'$ is generated with some weight $q(U)$ with probability $T(U \to U')$ 
+  \item Correction or Updating: $P_{accept}(U,U') = min \left[1,\frac{p(U')q(U)}{p(U)q(U')}\right]$
 \end{itemize} 
+Assuming that the above ratio follows a log-normal distribution then the acceptance rate is $\texttt{erfc}\left(\sqrt{\sigma^2/8}\right)$ where erfc is the complementary error function. The collection of configurations $U_i$ with associated weight $p(U)$ make up the ensemble. 
 
 
 \section{Software Stack for Distillation}
@@ -115,14 +116,18 @@ Before we dive into the details of the calculation of our distilled objects, it 
 
   
 \subsection{Eigenpairs/Distillation Basis Calculation}
+Sparse linear algebra is necessary to construct the smeared quark fields based on distillation, where the
+eigenvectors with smallest eigenvalues of the gauge-covariant Laplace operator $\nabla^2[t]$. 
 This is the first step in the calculation which is input data for the generation of elementals and perambulators. We use the \verb|Primme| eigensolver to obtain the eigenpairs(eigenvalues,eigenvectors) of the Hermitian Wilson-Dirac operator\cite{PRIMME}\cite{Frommer:2020ovr}. 
 the eigenbasis in distillation space contains the eigencvectors from the lowest-lying regime of the spectrum of the hermitian negative-definite Laplacian-like operator 
 \begin{equation}
   \nabla^{2(\vec{x},\vec{y})} = 6\delta_{\vec{x},\vec{y}} - \sum_{\vec{j}\in|(1,0,0),(0,10),(0,0,1)|}^{} U_{\vec{j}}^{(x)}\delta_{\vec{x}+\vec{j},\vec{y}} + U_{\vec{j}}^{(\vec{x}-\vec{j})^\dagger}\delta_{\vec{x}-\vec{j},\vec{y}}
 \end{equation}
 where the gauge fields $U$ are stout smeared. 
-
-
+Distillation smearing projects into the $N_D$ dimensional vector space \ref{eq:eigs} like so 
+\begin{equation}
+  \Box_{ab}(x_1,x_2,t) = V(x_1,t)^{d}_a V^{\dagger} (x_2,t)^{d}_b
+\end{equation} where $a,b$ are the color indices and $d = 1 \dots N_D$ is the distillation space index \cite{10.5555/3029317}. This is the eigenbasis in distillation space, which now allows us to access elements of the quark propagator.  
 
 \subsection{Inversion of the Dirac Matrix}
 WE use the Multigrid clover inverter from \texttt{QUDA}. 
@@ -133,7 +138,7 @@ The Dirac equation
 
 
 \subsection{Meson Elementals Calculation}
-The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplcations are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. If we disregard the perambulators for a moment, the correlation functions are described by the correlation between meson elementals at the different time-slices.  From \ref{sec:spec} we express the distilled meson elemental as 
+The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplcations are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. If we disregard the perambulators for a moment, the correlation functions are described by the correlation between meson elementals at the different time-slices.  From \todo{cite spec} we express the distilled meson elemental as 
 \begin{equation}
 \Phi^A_{\alpha\beta}(t) = V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \equiv V^{\dagger}(t)\mathcal{D}^A(t)V(t)S^A_{\alpha\beta}
 \end{equation} where $\mathcal{D}^A(t)$ is the lattice Dirac matrix and $S^A_{\alpha\beta}$ is the subduction coefficient, which is the identity for $\vec{P^2} = 0$.  
@@ -142,7 +147,7 @@ This tensor contraction invovles the following\cite{romero_efficient_2020}:
   \item Two 5-dimensional tensors (the distillation basis) $v,w$, the coordinates of which are on the \textbf{spatial} extent of the lattice $N_L$
   \subitem three color space components 
   \subitem distillation basis column index 
-  \item  4-dimensional tensor $z$ representing a phase $z^{\vec{x},l} = e^{-i\vec{p}\vec{x}$} which carries a component in $N_L$ and a momentum index
+  \item  4-dimensional tensor $z$ representing a phase $z^{\vec{x},l} = e^{-i\vec{p}\vec{x}}$ which carries a component in $N_L$ and a momentum index
   \item color contraction with the Kronecker delta 
   \subitem \todo{check this }$ M^{i,j,l} = \sum_{\vec{x}\in N_t,\alpha,\beta \in C}^{} \delta^{\alpha\beta} v^{\vec{x},\alpha,i}w^{\vec{x},\beta,j} z^{\vec{x},l} \text{for} \quad 1\leq i,j \leq n, 1\leq l \leq M$ 
 \end{itemize}
@@ -156,7 +161,7 @@ This tensor contraction invovles the following\cite{romero_efficient_2020}:
 \subsection{Perambulators Calculation}
 
 \section{Cost and Storage of Distillation}
-      As we highlighted in \ref{sec:spec}, distillation restricts operators to a small subspace while mainintaing overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can resue them to correlate a collection of interpolators.
+      As we highlighted in \todo{cite spec sec}, distillation restricts operators to a small subspace while mainintaing overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can resue them to correlate a collection of interpolators.
 
 % \cite{romero_efficient_2020}.
       \vspace{1em}
@@ -201,7 +206,7 @@ This tensor contraction invovles the following\cite{romero_efficient_2020}:
   \end{tikzpicture}
   \\ 
 
-\begin{tikzpicture}[node distance=0.08cm]
+\begin{tikzpicture}[node distance=0.06cm]
   
   % Part 2: Sequence of shapes (rectangles and squares), colored and skinnier
   \node (vrect1) [draw, fill=green!20, minimum width=0.3cm, minimum height=2cm, below=1.5cm of box1, anchor=west] {$V$};
@@ -227,7 +232,7 @@ This tensor contraction invovles the following\cite{romero_efficient_2020}:
 
   % Draw large brackets around the first and last boxes
   % Draw the "tr" label
-  \node at ($(vrect1.west) + (-0.8,0)$) {$\rightarrow$\textbf{tr}};
+  \node at ($(vrect1.west) + (-0.8,0)$) {\textbf{tr}};
   \draw[thick] 
   ($(vrect1.north west) + (-0.4, 0.2)$) -- ($(vrect1.south west) + (-0.4, -0.2)$); % left bracket
   \draw[thick] 
@@ -256,36 +261,37 @@ This tensor contraction invovles the following\cite{romero_efficient_2020}:
 \\
 \noindent
 \textbf{tr} 
-\begin{tikzpicture}[baseline={(current bounding box.center)}, node distance=1.2cm] % Minimal space between nodes
+\begin{tikzpicture}[baseline={(current bounding box.center)}, node distance=1.0cm]
 
   % Define smaller boxes without internal labels
-  \node (box0) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm] {};
-  \node (box_q0) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box0] {};
-  \node (box1) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm, right=of box_q0] {};
-  \node (box_q1) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box1] {};
-  \node (box2) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm, right=of box_q1] {};
-  \node (box_q2) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box2] {};
-  \node (box3) [draw, fill=blue!20, minimum width=0.2cm, minimum height=0.2cm, right=of box_q2] {};
-  \node (box_q3) [draw, fill=red!20, minimum width=0.2cm, minimum height=0.2cm, right=of box3] {};
+  \node (box0) [draw, fill=blue!20, minimum width=0.4cm, minimum height=0.4cm] {};
+  \node (box_q0) [draw, fill=red!20, minimum width=0.4cm, minimum height=0.4cm, right=of box0] {};
+  \node (box1) [draw, fill=blue!20, minimum width=0.4cm, minimum height=0.4cm, right=of box_q0] {};
+  \node (box_q1) [draw, fill=red!20, minimum width=0.4cm, minimum height=0.4cm, right=of box1] {};
+  \node (box2) [draw, fill=blue!20, minimum width=0.4cm, minimum height=0.4cm, right=of box_q1] {};
+  \node (box_q2) [draw, fill=red!20, minimum width=0.4cm, minimum height=0.4cm, right=of box2] {};
+  \node (box3) [draw, fill=blue!20, minimum width=0.4cm, minimum height=0.4cm, right=of box_q2] {};
+  \node (box_q3) [draw, fill=red!20, minimum width=0.4cm, minimum height=0.4cm, right=of box3] {};
   
-  % Attach the subscript and time labels to the right of the boxes
-  \node at ($(box0.east) + (0.5, 0)$) {\small $_0(0)$};
-  \node at ($(box_q0.east) + (0.7, 0)$) {\small $_{q0}$(t$_0$, t$_1$)};
-  \node at ($(box1.east) + (0.5, 0)$) {\small $_1$(t$_1$)};
-  \node at ($(box_q1.east) + (0.5, 0)$) {\small $_{q1}$(t$_1$, t$_2$)};
-  \node at ($(box2.east) + (0.5, 0)$) {\small $_2$(t$_2$)};
-  \node at ($(box_q2.east) + (0.5, 0)$) {\small $_{q2}$(t$_2$, t$_3$)};
-  \node at ($(box3.east) + (0.5, 0)$) {\small $_3$(t$_3$)};
-  \node at ($(box_q3.east) + (0.5, 0)$) {\small $_{q3}$(t$_3$, t$_0$)};
+  % Attach the subscript and time labels close to the boxes
+  \node at ($(box0.east) + (0.2, 0)$) {\small $_0(0)$};
+  \node at ($(box_q0.east) + (0.3, 0)$) {\small $_{q0}$(t$_0$, t$_1$)};
+  \node at ($(box1.east) + (0.2, 0)$) {\small $_1$(t$_1$)};
+  \node at ($(box_q1.east) + (0.3, 0)$) {\small $_{q1}$(t$_1$, t$_2$)};
+  \node at ($(box2.east) + (0.2, 0)$) {\small $_2$(t$_2$)};
+  \node at ($(box_q2.east) + (0.3, 0)$) {\small $_{q2}$(t$_2$, t$_3$)};
+  \node at ($(box3.east) + (0.2, 0)$) {\small $_3$(t$_3$)};
+  \node at ($(box_q3.east) + (0.3, 0)$) {\small $_{q3}$(t$_3$, t$_0$)};
   
   % Draw large brackets around the first and last boxes
   \draw[thick] 
-      ($(box0.north west) + (-0.4, 0.1)$) -- ($(box0.south west) + (-0.4, -0.1)$); % left bracket
+      ($(box0.north west) + (-0.5, 0.2)$) -- ($(box0.south west) + (-0.5, -0.2)$); % left bracket
   \draw[thick] 
-      ($(box_q3.north east) + (0.4, 0.1)$) -- ($(box_q3.south east) + (0.4, -0.1)$);  % right bracket
+      ($(box_q3.north east) + (0.5, 0.2)$) -- ($(box_q3.south east) + (0.5, -0.2)$);  % right bracket
 
 \end{tikzpicture}
-where are $4N_v \times 4N_v$ matrices. A contraction must be carrried out for every gauge configuration (we use 200 in this study); On each configuration, every timeslice and time source is accessed ($N_t = 96$,  $\#t_{src} = 24)$ 
+
+where the colored boxes are $4N_V \times 4N_V$ matrices. A contraction must be carrried out for every gauge configuration (we use 200 in this study); On each configuration, every timeslice and time source is accessed ($N_t = 96$,  $\#t_{src} = 24)$ 
 
 \todo{correct this for single node jobs}
 \begin{table}[!h]
@@ -306,14 +312,14 @@ where are $4N_v \times 4N_v$ matrices. A contraction must be carrried out for ev
   $3.3$    & $-0.1200$  & $-0.057$  & $16^3\times64$  & 500  & 360  & 1 & 5   & 12  & 2 & 8 & 3   \\ 
   $3.3$    & $-0.1265$  & $-0.057$  & $24^3\times64$  & 500  & 1190 & 1 & 21  & 42  & 2 & 8 & 11  \\ \hline
   \end{tabular}
-  \caption{Computer time requirements for measurements on the ensembles from Table~\ref{tab:ensembles}. The first row is based on the test runs we have made, while the following ones are based on the volume scaling of the problem.}
+  \caption{Computer time requirements for measurements on the ensembles from Table \todo{ensembles ref}. The first row is based on the test runs we have made, while the following ones are based on the volume scaling of the problem.}
   \label{tab:ensembles}
   \end{table}
 
 
 
 \section{Ensemble Details}
-We generated ensembles with $N_f = 2+1$ quark flavors, with 6-stout dynamical smeared Wilson fermions and a tree-level Symanzik improved gluon action. Having several $a$ and $m_{\pi}$ at our disposal permit a systematic study of $m_{\pi}$ dependence. Since the doubly charmed tetraquark of interest is close to $D^0D^0\pi^+$ threshold, it is sensitive to $m_{ud}$, thus, it is advantageous to have many ensembles. 
+We generated ensembles with $N_f = 2+1$ quark flavors, with 6-stout dynamical smeared Wilson fermions and a tree-level Symanzik improved gluon action. Having several $a$ and $m_{\pi}$ at our disposal will permit a systematic study of $m_{\pi}$ dependence of doubly charmed exotics. Since the doubly charmed tetraquark of interest is close to $D^0D^0\pi^+$ threshold, it is sensitive to $m_{ud}$, thus, it is advantageous to have many ensembles. 
 We are using the action and parameters already employed and tuned for Ref. \cite{Durr:2008zz}. 
 
 \begin{table}[!h]
@@ -331,7 +337,7 @@ We are using the action and parameters already employed and tuned for Ref. \cite
   $3.3$    & $-0.1233$  & $-0.057$  & $24^3\times64$  & $0.125$      & $330$         &  5000      \\ 
   $3.3$    & $-0.1265$  & $-0.057$  & $24^3\times64$  & $0.125$      & $280$         &  5000      \\ \hline
   \end{tabular}
-  \caption{Physical parameters of the ensembles that we have available for this project. Bare parameters have been taken from~\cite{Durr:2008zz}. \label{tab:ensembles}}
+  \caption{Physical parameters of the ensembles that we have available for this project. Bare parameters have been taken from~\cite{Durr:2008zz}.}
   \end{table}
 
 

@@ -5,7 +5,7 @@
 \label{sec:ops}
 %==============================================================================
 
-It is advantageous in lattice QCD studies to generate a large basis of interpolating operators to achieve maximal overlap with energy levels of interest. Distillation allows us to restrict this basis to maximize computational efficiency in both the generation of the fundamental objects (perambulators, elementals) and contractions. We first focus on the zero momentum case then extend this framework to non-zero momentum, eg. mesons in flight. We need to construct operators with the flavor basis $\bar c\bar s ud$, $c\bar s u\bar d$, $cc\bar u\bar d$ and $c\bar c u\bar d$, which create and destory a mesonic state, at some fixed time in Euclidean time. The destruction of the state is executed via a contraction of the creation operator with its adjoint at some later time $t$.  The information we can glean from this is the correlation of operators separated by some time $t$, whereby the transfer matrix eigenstates can be obtained \todo{CITE}. Moreover, the key difference between lattice and continuum eigenstates is the notion of spin, thus we must work in the circular basis of cartesian-vector-like derivative operators and gamma matrices. Using the preceeding section on correlator function construction from contractions, here we will form local and non-local distilled bilinear operators in different irreps of $O_h$, which will comprise a $N \times N$ matrix of two-point correlation functions for each irrep, the GEVP. The dimension of this matrix is, not surprisingly, the number of operators constructed in the particular irrep, as we cannot mix operators with different continuum quantum numbers. Our test case will be $J^{PC} =0^{-+}$, eg. a psuedoscalar such as the pion. We will walk through lattice operator construction to create a diqaurk $[\bar{q}q]$ of any spin ($J \in \mathbb{Z}$) and parity $P$ with two quark fields and an insertion of the covariant derivative $\nabla$ with gamma strucutre $\Gamma$, the product of which determines the spin $J$.  
+The overarching aim of hadron spectroscopy on the lattice is to simulate hadrons that we observe in collider experiments. It is advantageous in lattice QCD studies to generate a large basis of interpolating operators to achieve maximal overlap with energy levels of interest. Distillation allows us to restrict this basis to maximize computational efficiency in both the generation of the fundamental objects (perambulators, elementals) and contractions. We first focus on the zero momentum case then extend this framework to non-zero momentum, eg. mesons in flight. We need to construct operators with the flavor basis $\bar c\bar s ud$, $c\bar s u\bar d$, $cc\bar u\bar d$ and $c\bar c u\bar d$, which create and destory a mesonic state, at some fixed time in Euclidean time. The destruction of the state is executed via a contraction of the creation operator with its adjoint at some later time $t$.  The information we can glean from this is the correlation of operators separated by some time $t$, whereby the transfer matrix eigenstates can be obtained \todo{CITE}. Moreover, the key difference between lattice and continuum eigenstates is the notion of spin, thus we must work in the circular basis of cartesian-vector-like derivative operators and gamma matrices \cite{Morningstar:2013bda}. Using the preceeding section on correlator function construction from contractions, here we will form local and non-local distilled bilinear operators in different irreps of $O_h$, which will comprise a $N \times N$ matrix of two-point correlation functions for each irrep, the GEVP. The dimension of this matrix is, not surprisingly, the number of operators constructed in the particular irrep, as we cannot mix operators with different continuum quantum numbers. Our test case will be $J^{PC} =0^{-+}$, eg. a psuedoscalar such as the pion. We will walk through lattice operator construction to create a diqaurk $[\bar{q}q]$ of any spin ($J \in \mathbb{Z}$) and parity $P$ with two quark fields and an insertion of the covariant derivative $\nabla$ with gamma strucutre $\Gamma$, the product of which determines the spin $J$.  
   
 
 \section{Spin on a cubic lattice}
@@ -15,28 +15,18 @@ Angular momentum ceases to be a good quantum number on the lattice. In order to 
 \end{align}
 
 \section{Operators on the lattice}
-The lattice regulator ``breaks'' the $SO(3)$ subgroup to a discrete subgroup. 
-$O,\bar{O}$ mapped into the appropiate Hilbert Space such that the corresponding operators $\hat{O} ,\hat{O^\dagger}$  annihilate and create the particle states of interest. 
+A hadronic operator is a functional of the lattice fields with supplied quantum numbers. These are the gauge-invariant color singlet objects. The lattice regulator ``breaks'' the $SO(3)$ subgroup to a discrete subgroup. $O,\bar{O}$ mapped into the appropiate Hilbert Space such that the corresponding operators $\hat{O} ,\hat{O^\dagger}$  annihilate and create the particle states of interest. We can identify physically allowed states via the spectral decomposition of propagators of interpolating operators: 
+\begin{equation}
+\braket{O(n_t)\bar{O(0)}} = \sum_{n}\braket{0|\hat{O}|k} \braket{k|\hat{O^{\dagger}}|0} e^{-n_taE_k}
+\end{equation}
 
-A hadronic operator is a functional of the lattice fields with supplied quantum numbers. These are the gauge-invariant color singlet objects. 
-
-We can identify physically allowed states via the spectral decomposition of propagators of interpolating operators: 
-$\braket{O(n_t)\bar{O(0)}} = \sum_{n}\braket{0|\hat{O}|k} \braket{k|\hat{O^{\dagger}}|0} e^{-n_taE_k}$
-
-It is important to note that different spin and parity correspond to different gamma matrices in the fermionic bilinears.  
-
-A general local meson interpolator has the form $O_M(n) = \bar{\psi}^{f_1}(n)\Gamma\psi^{f_2}(n)$ where $\Gamma$ is a monomial of gamma matrices and $f$ are of the exposed flavor indices. In our calculations, the fermions fields $\bar{\psi},\psi$ are smeared with the distillation operator. 
-
-Now that we have our interpolators in hand, in order to obtain the euclidean correlator we need the conjugate interpolator which generates a meson state from the vacuum 
-
-
-Armed with the continuum version of operators, which are classified via charge conjugation and Lorentz transformations, we can cosntruct our lattice operators. The first step is to perform a Wick rotation so that our operators now reside in euclidean spacetime, then substitute the covariant derivatives with the lattice covariant derivative \cite{G_ckeler_1996}, 
+It is important to note that different spin and parity correspond to different gamma matrices in the fermionic bilinears. Armed with the continuum version of operators, which are classified via charge conjugation and Lorentz transformations, we can cosntruct our lattice operators. The first step is to perform a Wick rotation so that our operators now reside in euclidean spacetime, then substitute the covariant derivatives with the lattice covariant derivative \cite{G_ckeler_1996}, 
 \begin{align}
     \overrightarrow{D_\mu}\psi(x) = \frac{1}{2a}(U_{x,\mu}\psi(x + \hat{\mu}) - U_{x-\hat{\mu},\mu}^\dagger\psi(x - \hat{\mu}))
 \end{align}
 
-\section{Meson operators at $\vec{p}=000$}
-We detail the operator construction for zero total momentun, continuum spin $J^P$ and spin component $m$. The ingredients are gauge-covariant derivatives(for local operators this is just $\mathbb{I}$), Dirac matrix $\Gamma$, and the distilled meson elementals and perambulators. We obtain the lattice interpolator from the general(continuum) operator by subducing into irreps of the octahedral group $O_h$, see \ref{sec:app}. In table 1 of \cite{Cheung_2017}, we have the following for the 0 total momentum states: 
+\section{Meson operators at zero total momentum}
+We detail the operator construction for zero total momentun, continuum spin $J^P$ and spin component $m$. In general, a local meson interpolator has the form $O_M(n) = \bar{\psi}^{f_1}(n)\Gamma\psi^{f_2}(n)$ where $\Gamma$ is a monomial of gamma matrices and $f$ are of the exposed flavor indices. In our calculations, the fermions fields $\bar{\psi},\psi$ are smeared with the distillation operator. The ingredients are gauge-covariant derivatives(for local operators this is just $\mathbb{I}$), Dirac matrix $\Gamma$, and the distilled meson elementals and perambulators. We obtain the lattice interpolator from the general(continuum) operator by subducing into irreps of the octahedral group $O_h$. In table 1 of \cite{Cheung_2017}, we have the following for the 0 total momentum states: 
 \begin{table}
     \begin{tabular}{ccc}
     $LG$ & $\Lambda^p$ & $J^p$ \\
@@ -44,6 +34,7 @@ We detail the operator construction for zero total momentun, continuum spin $J^P
     $O_h$ & $T_1^+$ & $1^+$ \\
     $O_h$ & $A_1^-$ & $0^-$ \\
 \end{tabular}
+\end{table}
 Fermion-bilinear operators with continuum spin $J$ and momentum $\vec{p}$ are written like so \cite{Cheung_2017}
     \begin{equation}
     \mathcal{O}^{J,m}(\vec{p},t) = \sum_{\vec{x}} e^{i\vec{p}\vec{x}} \bar{q}(\vec{x},t) [\Gamma \overleftrightarrow{D}\dots \overleftrightarrow{D}]^{J,m}q(\vec{x},t)
@@ -80,8 +71,7 @@ Below is the table of lattice irrep operators at $\vec{p} = (0,0,0)$ \cite{Dudek
 
 \end{tabular}
 
-
-For the single pion case, : 
+Now that we have our interpolators in hand, in order to obtain the euclidean correlator we need the conjugate interpolator which generates a meson state from the vacuum. For the single pion case, 
 \begin{itemize}
     \item $\gamma_4\gamma_5$
 
@@ -122,7 +112,7 @@ nce expressed in this basis, which transforms like spin-1, operators of definite
   \big\rangle\,  \bar{\psi} \Gamma_{m_1}
   \overleftrightarrow{D}_{m_2} \psi. \nonumber
 \end{equation}
-The choice of $\Gamma$ plays a role in setting the parity and charge-conjugation quantum numbers of the operator, see Table \ref{Table:gamma}, names assigned by the lowest lying meson in that particular channel. As noted in the introduction of this chapter, we must distribute the different $M$ components belonging to a meson of spin $J$ into definite cubic(lattice) irreps via the group theoretical process called subduction. This is carried out by linear combinations of the $M$ components for each $J$\cite{Dudek_2010}:
+The choice of $\Gamma$ plays a role in setting the parity and charge-conjugation quantum numbers of the operator, \todo{fix crossref to gamma table}, names assigned by the lowest lying meson in that particular channel. As noted in the introduction of this chapter, we must distribute the different $M$ components belonging to a meson of spin $J$ into definite cubic(lattice) irreps via the group theoretical process called subduction. This is carried out by linear combinations of the $M$ components for each $J$\cite{Dudek_2010}:
 \begin{eqnarray}
 {\cal O}^{[J]}_{\Lambda,\lambda} \equiv (\Gamma \times D^{[n_D]}_{\ldots})^J_{\Lambda, \lambda} =  \nonumber\\
 & & \sum_M {\cal
@@ -132,7 +122,7 @@ The choice of $\Gamma$ plays a role in setting the parity and charge-conjugation
 where $\lambda$ is the ``row'' of the irrep ($1\ldots\mathrm{dim}(\Lambda)$). 
 
 \subsubsection{Example for $J=0$}
-As seen in \ref{Table:Subduce}, since this spin value only subduces into the $A_1$ irrep, $\cal{S}_{A_1,1}^{0,0} = 1$. This coefficient would correspond to \todo{example state and operator}
+As seen in \todo{fix subduction table crossref}, since this spin value only subduces into the $A_1$ irrep, $\cal{S}_{A_1,1}^{0,0} = 1$. This coefficient would correspond to \todo{example state and operator}
 
 %-------------------------------------------------------------------------------%
 
@@ -163,7 +153,7 @@ $\gamma_4\gamma_5\mathbb{E}^i$
 
 Following the CG construction of \cite{Basak_2005}
 
-\section{Mesons in flight ($\vec{p}\neq 000$)}
+\section{Mesons in flight}
 
 At non-zero momentum, $O_h$ is broken down to the little groups of Dicyclic nature, eg. $DiC_2, DiC_4$. The extra ingredient required, in contrast to the zero momentum operators, are subduction coefficients that define the helicity operators. For these, we use the Wigner D-matrices then subduce into the irreps of the little group corresponding to the little group of the total momentum $\vec{P}$. 
 
@@ -204,7 +194,7 @@ We can construct the color singlet tetraquark interpolating operators the follow
     \end{equation}
 
 
-    \item diquark-antidiquark prescription. However, we will not employ this method. According to \cite{Pacheco_2023}, there is no significant shift in the ground state energy when adding diquark-antidiquark interpolators to the basis when the heavy quark mass is close to $m_{q=c}^{phys}$. However, with quark masses approaching the bottom quark, this no longer holds, since it is posited that $T_{bb}$ is a diquakr-antidiquark state. \textbf{WHY}
+    \item diquark-antidiquark prescription. However, we will not employ this method. According to \cite{Ortiz-Pacheco:2023ble}, there is no significant shift in the ground state energy when adding diquark-antidiquark interpolators to the basis when the heavy quark mass is close to $m_{q=c}^{phys}$. However, with quark masses approaching the bottom quark, this no longer holds, since it is posited that $T_{bb}$ is a diquakr-antidiquark state. \textbf{WHY}
 \end{enumerate}
 
 The interpolators we will consider follow that of \cite{Padmanath_2022} in Table I, 
@@ -214,7 +204,7 @@ The interpolators we will consider follow that of \cite{Padmanath_2022} in Table
 % \end{figure}
 The optimized single-meson operators are denoted by $M^{[n_1n_2n_3]}_{\Lambda}$ where $M$ is the meson, $\Lambda$ is the lattice irrep, $[n_1n_2n_3]$ is the momentum in units of $\frac{2\pi}{L}$.  \cite{Cheung_2017}
 
-\subsection{$T_1^+$}
+\subsection{Operators in doubly charmed sector}
 The interpolating operators used to calculate the spectra for the doubly charmed sector with isospin-0 belonging to the irrep $T_1^+$ are as follows:
 \subsubsection*{$D^{*[000]}_{T_1}D^{*[000]}_{T_1}$}
 

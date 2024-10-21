@@ -108,15 +108,15 @@
 % A simple \include command just inserts a \clearpage before and after the file
 % Note that \includeonly can be quite picky! Do not forget to put a
 % comma after the filename, otherwise it will simply be ignored!
-\includeonly{%
+\includeonly{
   thesis_intro,
   thesis_spec,
-  % thesis_ops,
   thesis_comp,
-  % thesis_signal,
+  thesis_ops,
+  thesis_signal,
   % thesis_future,
   thesis_appendix,
-  % thesis_acknowledge
+  thesis_acknowledge
 }
 
 %------------------------------------------------------------------------------
@@ -170,10 +170,10 @@
 % Add your chapters here - don't forget to also add them to \includeonly above
 \include{thesis_intro}
 \include{thesis_spec}
-% \include{thesis_ops}
 \include{thesis_comp}
+\include{thesis_ops}
 \include{thesis_signal}
-\include{thesis_future}
+% \include{thesis_future}
 
 % Uncomment the following command to get references per chapter.
 % Put it inside the file or change \include to \input if you do not want the references
