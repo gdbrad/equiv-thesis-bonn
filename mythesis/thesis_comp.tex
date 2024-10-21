@@ -3,6 +3,8 @@
 \chapter{Computational Considerations}
 \label{sec:comp}
 %==============================================================================
+The amount of compute time for generating the eigenbasis, and subsequently the perambulators and meson elementals, scales with the spatial extent of the lattice $N$ and the rank of the distillation basis $n$. We provide an overview of our lattice setup and a summary of the Hybrid Monte Carlo method for generating gauge configurations. Next, we present the software stack and pipeline for our calculations on the Jureca cluster, including the storage and runtime cost associated with each object necessary for performing hadron spectroscopy with distillation. As this framework hinges upon algebraic mulitigrid methods, we touch on the key points and how this technology interfaces with \texttt{Chroma} lattice objects. At the final stage, matrix elements(meson elementals) and perambulators are contracted together with some appropiate Dirac strucutre depending on the flavor and isospin channel (the $J^{PC}$ continuum quantum numbers to be accessed), which we elucidate diagramatically. The details of our 6-stout smeared ensembles are given for completion. Having a wide range of pion masses and lattice spacings to study will allow us to probe the quark mass dependence of the exotic doubly charmed tetraquark state $T_{cc}^+$.   
+
 \section{Lattice Setup}
 The only known \textit{ab-initio} approach to probing the low energy regime of QCD is with High Performance Computing(HPC) and the discretized lattice from . At bottom, a path-integral approach is used to compute some observable $\mathcal{O}$ with a predefined collection of bare physics and lattice parameters$\{\beta,am_{ud},am_s\}$. From \ref{sec:spec}, we know the lattice path integral is:
 \begin{align}
@@ -25,6 +27,15 @@ In  we showed how the discretization of the euclidean path integral reduces the 
 \section{Software Stack for Distillation}
 Distillation is costly initially both in storage and component construction. This pays off at the end of the day as we can reuse the perambulators for subsequent calculations; The inversions can be precomputed and stored on disk. For the di-meson system we are investigating, the contraction cost is not the dominant contribution. We will use the MultiGrid (MG) solver from \texttt{QUDA}, \texttt{Chroma} with \texttt{Superbblas} support, the \texttt{PRIMME} eigensolver, and \texttt{Numpy Einsum} for contractions. The amount of computation and storage scales with the lattice size $N$ and the rank of the distillation basis, $n$. The optimal rank of the distillation basis is determined experimentally, but it is proportional to the spatial volume of the lattice. All of the high-peformance computing tasks below were performed on the Jureca cluster at the Juelich Supercomputing Centre. 
 \section{Pipeline}
+In order to perform spectroscopy calculations for a given ensemble, there exists a sequential dependency chain for HPC calculations:
+\begin{itemize}
+     \setlength\itemsep{1em}
+        \item[\checkmark] \textbf{Ensemble generation:} $N_f = 2+1$ quark flavors, a tree level Symanzik improved gluon action and 6-stout dynamical smeared Wilson fermions
+        \item[\checkmark] \textbf{HPC Tasks:} Generation of distillation basis, perambulators, meson elementals using \texttt{Chroma} with \texttt{superbblas} support on the Jureca cluster at JSC
+        \item Construct \textbf{Di-meson distilled operators} using Hadspec method of subduction coefficents and helicity operators
+        \item[\checkmark] Perform \textbf{contractions} of multi-hadron operators $\to$ 2pt correlators
+        \item Construct correlation function coming from the \textbf{GEVP} in the right irreducible representation
+    \end{itemize}
 \begin{figure}[!htbp]
     \begin{center}
       \scalebox{1.0}{
@@ -73,7 +84,7 @@ Distillation is costly initially both in storage and component construction. Thi
 Computing fundamental building blocks on the lattice, which will each be discussed in the proceeding sections, requires sophisticated hardware architecure. We use the \verb|Chroma| software stack from USQCD \cite{Edwards_2005} compiled with \verb|superbblas| support (required for computing the distilled objects of interest), and the multigrid solver from \verb|QUDA|. We run the HPC tasks on a single GPU node, as we found multi-node jobs are not compatible with our stack and the Jureca cluster at JSC. This stack ultimately allows us to calculate a large class of matrix elements at high precision \cite{romero_efficient_2020} using distillation. 
 
 Before we dive into the details of the calculation of our distilled objects, it is useful to show how lattice objects in \texttt{Chroma} transform under different spaces with a tensor product structre \cite{Edwards_2005}. 
-
+\begin{table}
 \begin{displaymath}
   \begin{array}{llcccccl}
                     & {\textit Lattice} &    &  {\textit Color} &     & {\textit Spin}  &     & {\textit Complexity}\\
@@ -84,11 +95,13 @@ Before we dive into the details of the calculation of our distilled objects, it 
   {Gamma:}       & {\texttt Scalar}  &\otimes& {\texttt Scalar}    &\otimes& {\texttt Matrix(Ns)}&\otimes& {\texttt Complex}\\
   \end{array}
   \end{displaymath}
+  \caption{The tensor structure of \texttt{Chroma} objects.}
+    \label{fig:chroma}
+\end{table}
+
   
   \verb|Nd| is the number of space-time dimensions\\
-  \noindent
   \verb|Nc| is the dimension of the color vector space\\
-  \noindent
   \verb|Ns| is the dimension of the spin vector space\\
   
   Gauge fields can left-multiply fermions via color matrix times color
@@ -103,6 +116,13 @@ Before we dive into the details of the calculation of our distilled objects, it 
   
 \subsection{Eigenpairs/Distillation Basis Calculation}
 This is the first step in the calculation which is input data for the generation of elementals and perambulators. We use the \verb|Primme| eigensolver to obtain the eigenpairs(eigenvalues,eigenvectors) of the Hermitian Wilson-Dirac operator\cite{PRIMME}\cite{Frommer:2020ovr}. 
+the eigenbasis in distillation space contains the eigencvectors from the lowest-lying regime of the spectrum of the hermitian negative-definite Laplacian-like operator 
+\begin{equation}
+  \nabla^{2(\vec{x},\vec{y})} = 6\delta_{\vec{x},\vec{y}} - \sum_{\vec{j}\in|(1,0,0),(0,10),(0,0,1)|}^{} U_{\vec{j}}^{(x)}\delta_{\vec{x}+\vec{j},\vec{y}} + U_{\vec{j}}^{(\vec{x}-\vec{j})^\dagger}\delta_{\vec{x}-\vec{j},\vec{y}}
+\end{equation}
+where the gauge fields $U$ are stout smeared. 
+
+
 
 \subsection{Inversion of the Dirac Matrix}
 WE use the Multigrid clover inverter from \texttt{QUDA}. 
@@ -113,26 +133,37 @@ The Dirac equation
 
 
 \subsection{Meson Elementals Calculation}
-The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplcations are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. This tensor contraction invovles the following\cite{romero_efficient_2020}: 
+The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplcations are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. If we disregard the perambulators for a moment, the correlation functions are described by the correlation between meson elementals at the different time-slices.  From \ref{sec:spec} we express the distilled meson elemental as 
+\begin{equation}
+\Phi^A_{\alpha\beta}(t) = V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \equiv V^{\dagger}(t)\mathcal{D}^A(t)V(t)S^A_{\alpha\beta}
+\end{equation} where $\mathcal{D}^A(t)$ is the lattice Dirac matrix and $S^A_{\alpha\beta}$ is the subduction coefficient, which is the identity for $\vec{P^2} = 0$.  
+This tensor contraction invovles the following\cite{romero_efficient_2020}: 
 \begin{itemize}
-  \item Two 5-dimensional tensors (the distillation basis) $v,w$, the coordinates of which are on the \textbf{spatial} extent of the lattice $L_N$
+  \item Two 5-dimensional tensors (the distillation basis) $v,w$, the coordinates of which are on the \textbf{spatial} extent of the lattice $N_L$
   \subitem three color space components 
   \subitem distillation basis column index 
-  \item  4-dimensional tensor $z$ 
-  \item color contraction with the Levi-Civita tensor  
+  \item  4-dimensional tensor $z$ representing a phase $z^{\vec{x},l} = e^{-i\vec{p}\vec{x}$} which carries a component in $N_L$ and a momentum index
+  \item color contraction with the Kronecker delta 
+  \subitem \todo{check this }$ M^{i,j,l} = \sum_{\vec{x}\in N_t,\alpha,\beta \in C}^{} \delta^{\alpha\beta} v^{\vec{x},\alpha,i}w^{\vec{x},\beta,j} z^{\vec{x},l} \text{for} \quad 1\leq i,j \leq n, 1\leq l \leq M$ 
 \end{itemize}
+
+\todo{insert time to write to disk vs. time to compute from total chroma time and qio time from output files }
+
+
+
 
 
 \subsection{Perambulators Calculation}
 
 \section{Cost and Storage of Distillation}
-As we highlighted in \ref{sec:spec}, distillation restricts operators to a small subspace while mainintaing overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. 
+      As we highlighted in \ref{sec:spec}, distillation restricts operators to a small subspace while mainintaing overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can resue them to correlate a collection of interpolators.
+
 % \cite{romero_efficient_2020}.
       \vspace{1em}
        
        % The product of        %  \texttt{max_tslices_in_contraction} \texttt{max_moms_in_contraction} and \texttt{max_vecs} controls how much memory is used for contractions. Their tuning is more critical when using GPUs. The optimal value is usually the largest values of the parameters that the CPU or device can handle.
-        % \begin{table}
-         \begin{minipage}{16cm}
+        \begin{table}
+        \begin{minipage}{16cm}
         \hspace*{2em}\begin{tabular}{ccc}
         Computation    & Operations cost & Memory footprint \\ \hline
         Distillation basis\footnote{Generate colorvector matrix elements}& $N^3Tn^3D$         & $N^3nT$      \\
@@ -141,20 +172,8 @@ As we highlighted in \ref{sec:spec}, distillation restricts operators to a small
         Contractions\footnote{Contract together matrix elements and perambulators}   & $n^4T$    & $n^{3}T$   
         \end{tabular}
         \end{minipage}
-        once a suitable set of perambulators compute, \textbf{reuse} to correlate a collection of interpolators
-        
-In order to perform spectroscopy calculations for a given ensemble, there exists a sequential dependency chain:
-\begin{itemize}
-     \setlength\itemsep{1em}
-        \item[\checkmark] \textbf{Ensemble generation:} $N_f = 2+1$ quark flavors, a tree level Symanzik improved gluon action and 6-stout dynamical smeared Wilson fermions
-        \item[\checkmark] \textbf{HPC Tasks:} Generation of distillation basis, perambulators, meson elementals using \texttt{Chroma} with \texttt{superbblas} support on the Jureca cluster at JSC
-        \item Construct \textbf{Di-meson distilled operators} using Hadspec method of subduction coefficents and helicity operators
-        \item[\checkmark] Perform \textbf{contractions} of multi-hadron operators $\to$ 2pt correlators
-        \item Construct correlation function coming from the \textbf{GEVP} in the right irreducible representation
-        \item \textbf{Compute spectrum} and energy shifts w.r.t to the $DD^*$ threshold for a heavy quark mass close to the charm quark mass.
-        \item \textbf{L\"uscher analysis} to obtain finite volume energies from Scattering amplitudes
-        \item \textbf{Search for Poles} AKA when an attractive potential is not deep enough to hold a bound state
-    \end{itemize}
+        \caption{computational cost with reference time per gauge configuration and time-slice source to calcualte a two point correlation function. $N$: lattice size, $n$:rank of distillation basis}
+      \end{table}
 
   \section{Contractions}
   We must ``tie" together the perambulators and elementals with some Dirac gamma structure, where we isolate the channel of interest ($J^{PC}$ continuum quantum numbers) with the lattice group representation. For a single meson correlator, \\ 
