@@ -137,11 +137,18 @@ The Dirac equation
 \end{align}
 
 
-\subsection{Meson Elementals Calculation}
-The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplcations are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. If we disregard the perambulators for a moment, the correlation functions are described by the correlation between meson elementals at the different time-slices.  From \todo{cite spec} we express the distilled meson elemental as 
+\subsection{Calculating Meson Elementals}
+The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplcations are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. If we disregard the perambulators for a moment, the correlation functions are described by the correlation between meson elementals at the different time-slices. We can write the distilled meson elemental as 
 \begin{equation}
 \Phi^A_{\alpha\beta}(t) = V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \equiv V^{\dagger}(t)\mathcal{D}^A(t)V(t)S^A_{\alpha\beta}
-\end{equation} where $\mathcal{D}^A(t)$ is the lattice Dirac matrix and $S^A_{\alpha\beta}$ is the subduction coefficient, which is the identity for $\vec{P^2} = 0$.  
+\end{equation} where $\mathcal{D}^A(t)$ is the lattice Dirac matrix and $S^A_{\alpha\beta}$ is the subduction coefficient, which is the identity for $\vec{P^2} = 0$.
+For non-zero displacement, the $\Gamma$ operator is no longer trivial in position and color space and requires single or double covariant derivatives, $\nabla_i$ where $i$ is in the x,y,or z direction, to act on the 3D spinor components at some time $t$. In the later section on derivative operators, we will show how this is expressed in the language of $\texttt{Chroma}$. For completeness, the elemental form for zero,single,and double derivative displacement,respectively, are: 
+\begin{eqnarray}
+  V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \\ 
+  V^{\dagger}(t) [\nabla_k(t)]_{\alpha\beta} V(t) \\ 
+  V^{\dagger}(t) [\nabla_k(t)\nabla_l(t)]_{\alpha\beta} V(t) \\ 
+
+\end{eqnarray}
 This tensor contraction invovles the following\cite{romero_efficient_2020}: 
 \begin{itemize}
   \item Two 5-dimensional tensors (the distillation basis) $v,w$, the coordinates of which are on the \textbf{spatial} extent of the lattice $N_L$
@@ -149,16 +156,22 @@ This tensor contraction invovles the following\cite{romero_efficient_2020}:
   \subitem distillation basis column index 
   \item  4-dimensional tensor $z$ representing a phase $z^{\vec{x},l} = e^{-i\vec{p}\vec{x}}$ which carries a component in $N_L$ and a momentum index
   \item color contraction with the Kronecker delta 
-  \subitem \todo{check this }$ M^{i,j,l} = \sum_{\vec{x}\in N_t,\alpha,\beta \in C}^{} \delta^{\alpha\beta} v^{\vec{x},\alpha,i}w^{\vec{x},\beta,j} z^{\vec{x},l} \text{for} \quad 1\leq i,j \leq n, 1\leq l \leq M$ 
+  \subitem $ M^{i,j,l} = \sum_{\vec{x}\in N_t,\alpha,\beta \in C}^{} \delta^{\alpha\beta} v^{\vec{x},\alpha,i}w^{\vec{x},\beta,j} z^{\vec{x},l} \text{for} \quad 1\leq i,j \leq n, 1\leq l \leq M$ 
 \end{itemize}
+which is performed at different time slices in parallel. 
 
-\todo{insert time to write to disk vs. time to compute from total chroma time and qio time from output files }
+\subsection{Calculating Perambulators}
+The perambulator characterizes the distilled version of a quark propagator from time $t_0$ to some later time $t_f$ and all combinations therein for the entire temporal extent $N_t$ of the lattice \cite{peardon_novel_2009}
+\begin{equation}
+  \tau[t_0,t_f]_{ij}^{\alpha\beta} = v_{i,\alpha}[t_0]^{\dagger} D^{-1}v_{j,\beta}[t_f]
+\end{equation} where we can factorize these $4N_v \times 4N_v$ matrices like so 
+\begin{equation}
+  (4 \times 4) \otimes (N_v \times N_v)
+\end{equation} yielding $16N_v^2$ inner products and $4N_v$ inversions. One can immediately form the permabulator $\tau(t_0,t_f)$ for all values of $t_0$ after solving for the vector $D^{-1}v_{j\beta}[t_f]$ on each configuration; Each configuration will have its own perambulator binary file containing information over all possible time slices. We use the Wilson-Clover multigrid solver from $\texttt{QUDA}$ \cite{quda} specifially the GCR solver(a Krylov solver) to calculate the linear system of equations 
+\begin{equation}
+  Dx^{i\alpha} = v_{i\alpha}(t)
+\end{equation} where $i$ is the rank of the distillation basis, $\alpha$ is a color index \todo{I think?} and $t$ is indexed along the temporal extent of the lattice. 
 
-
-
-
-
-\subsection{Perambulators Calculation}
 
 \section{Cost and Storage of Distillation}
       As we highlighted in \todo{cite spec sec}, distillation restricts operators to a small subspace while mainintaing overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can resue them to correlate a collection of interpolators.

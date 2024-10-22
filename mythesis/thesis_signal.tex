@@ -56,24 +56,37 @@ with momentum $\vec p$ is
 We present preliminary results for the mass and overlap factors of a single pion with $\vec{p} = (000)$ in order to determine the optimal distillation parameters eg. rank of the distillation basis and number of time sources. This determination will allow us to optimize compute resources for the eigenbasis, perambulators, and elementals for the rest of the ensembles \todo{see ensemble table} we have generated. 
 \section{Correlator Fits}
 
-Here we present results for a systematic study of how the signal of the pion two-point correlator with $\vec{p}=(0,0,0)$ is affected by the rank of the distillation basis (number of eigenvectors used) and the number of $t_{src}$ insertions. The sizes of the distillation basis take values in the set $n_{vec}\in {32,64,96,128}$ and the number of $t_{src} \in {1,2,4,8,12,24}$. We perform this study on the ensemble \todo{insert ens info }
+Here we present results for a systematic study of how the signal of the pion two-point correlator with $\vec{p}=(0,0,0)$ is affected by the rank of the distillation basis (number of eigenvectors used) and the number of $t_{src}$ insertions. The sizes of the distillation basis take values in the set $n_{vec}\in {32,64,96,128}$ and the number of $t_{src} \in {1,2,4,8,12,24}$. We perform this study on the ensemble $\beta = 3.7$, $m_{ud}=-0.0220$, $m_s = -0.0$, $L^3 \times T = 32^3\times96$
 
 The raw correlators after averaging over all $t_{src}$ \todo{insert plot of corrs from corrfit}
 
 The effective masses for each $n_{vec}$: \todo{insert plot}
 
-\subsection{Fits to the $\pi$ correlator}
 
 \subsubsection{$n_{vec}$ dependence}
 
-\todo{insert master pot}
+\begin{figure}[h]
+    \includegraphics[width=1.0\textwidth, inner]{nvecs.png}
+    \caption{comparison of ground state energy of the pion for different sizes(rank) of the distillation basis}
+    \label{fig:figure2}
+    \end{figure}
+
 \subsubsection{$t_{src}$ dependence}
-\todo{insert master plot}
+\begin{figure}[h]
+    \includegraphics[width=1.0\textwidth, inner]{tsrc_nskips.png}
+    \caption{comparison of ground state energy of the pion for various number of $t_{src}$ insertions}
+    \label{fig:figure3}
+    \end{figure}
+\begin{figure}[h]
+    \includegraphics[width=1.0\textwidth, inner]{nskip_1.png}
+    \caption{single state fit to the effective mass of the pion for 24 $t_{src}$ insertions}
+    \label{fig:figure4}
+    \end{figure}
+    
+We performed a systematic study of the mesonic signal saturation using the pion as a test case as it typically provies the cleanest signal in lattice calculations. With this complete, we will proceed with computing the fundamental distillation objects using a distillation basis of rank 96 and 24 $t_{src}$ insertions for the perambulators. 
 
-\subsection{}
 
-
-
+\newpage
 
 \section{Momentum projection}
 For non-local operators used to construct mesons in flight, we must momentum project into states of definite momentum, which will reside in some irreducible representation of the octahedral group. 
