@@ -4,7 +4,7 @@
 %------------------------------------------------------------------------------
 \section{Group theory in QCD}
 We briefly touch on the pertinent group theory that manifests in the study of QCD and how this relates to operator construction on the lattice. 
-There exists 8 unique diquark multiplets ($\text{flavor} \times \text{color} \times \text{spin}$) that can be created from the vacuum by operators biliner in the quark field. Each quark is a color tripllet, therefor ethe pair of them can form a color $\bar{3}c$, which is antisymmetiric, or the symmetric $6_c$. This is due to the fact that each flavor of quark belongs to the fundamental representation $3$ and contains a triplet of fields, 
+There exists 8 unique diquark multiplets ($\text{flavor} \times \text{color} \times \text{spin}$) that can be created from the vacuum by operators biliner in the quark field. Each quark is a color triplet, therefor ethe pair of them can form a color $\bar{3}c$, which is antisymmetiric, or the symmetric $6_c$. This is due to the fact that each flavor of quark belongs to the fundamental representation $3$ and contains a triplet of fields, 
 \begin{equation}
     \Psi = \begin{bmatrix}
         \psi_1 \\
@@ -12,8 +12,6 @@ There exists 8 unique diquark multiplets ($\text{flavor} \times \text{color} \ti
         \psi_3 \\ 
     \end{bmatrix}
 \end{equation}
-
-\section{Discrete Group Theory}
 
 We obtain the stationary state energies of QCD using periodic boundary conditions by working in a cubic box. However, we no longer have the full rotational symmetry of the continuum. The lattice breaks rotational symmetry due to the fact that the spatial volume of the hypercube possess only discrete rotational symmetry, that of a cube, so we can think of this as a subgroup of the full rotational symmetry in the continuum. Consequently, these stationary states can no longer be labelled by the typical spin-$J$ quantum numbers. Thus, we need a ``new'' quantum number. The group theory machinery to obtain these new quantum numbers are the irreps of the cubic space group. \textbf{The interpolating operators used in a lattice calculation must transform irreducibly under all symmetries of the 3D-cubic lattice}. 
 
@@ -41,13 +39,12 @@ Where $l$ is a $3\times3$ matrix and $P$ is total momenta. This satisfies the re
 \begin{align}
     \braket{k_i|l|k_j} = (M_l)_{ij}
 \end{align} 
-Where $M_l$ is a permutation matrix which is a reducible representation of $L$ and has the dimensions $|\text{shell}| \times |\text{shell}|$. 
-\todo{insert list of all shell values with total momentum }
+Where $M_l$ is a permutation matrix which is a reducible representation of $L$ and has the dimensions $|\text{shell}| \times |\text{shell}|$. For example, 
+% \todo{insert list of all shell values with total momentum }
 
 \begin{align}
     k^2 = 0 & \vec{k} = 000 & {(000)} \\
     k^2 = 1 & \vec{k}=100 & {(100),(-100)(010)(0-10)(001)(00-1)} \\
-    \todo{continue}
 \end{align}
 
 
