@@ -159,13 +159,9 @@ The perambulator characterizes the distilled version of a quark propagator from 
 
 
 \section{Cost and Storage of Distillation}
-      As we highlighted in the Hadron Spectroscopy chapter, distillation restricts operators to a small subspace while mainintaing overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can resue them to correlate a collection of interpolators.
-
-% \cite{romero_efficient_2020}.
+      As we highlighted in \cref{sec:spec}, distillation restricts operators to a small subspace while maintaining overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can resue them to correlate a collection of interpolators.
       \vspace{1em}
-       
-       % The product of        %  \texttt{max_tslices_in_contraction} \texttt{max_moms_in_contraction} and \texttt{max_vecs} controls how much memory is used for contractions. Their tuning is more critical when using GPUs. The optimal value is usually the largest values of the parameters that the CPU or device can handle.
-        \begin{table}
+        \begin{table}[H]
         \begin{minipage}{16cm}
         \hspace*{2em}\begin{tabular}{ccc}
         Computation    & Operations cost & Memory footprint \\ \hline
@@ -179,7 +175,8 @@ The perambulator characterizes the distilled version of a quark propagator from 
       \end{table}
 
   \section{Contractions}
-  We must ``tie" together the perambulators and elementals with some Dirac gamma structure, where we isolate the channel of interest ($J^{PC}$ continuum quantum numbers) with the lattice group representation. For a single meson correlator, \\ 
+  We must ``tie" together the perambulators and elementals with some Dirac gamma structure, where we isolate the channel of interest ($J^{PC}$ continuum quantum numbers) with the lattice group representation. For a single meson correlator, we begin with taking the trace over square matrices, where $S$ is the distillation operator $V(t)JV^{\dagger}(t)$ \cite{Neuendorf:2024ekv} that acts on the quark fields
+  \\ 
 
   \begin{tikzpicture}[node distance=0.1cm]  % Minimal space between nodes
     \node (box1) [draw, fill=blue!20, minimum width=1.5cm, minimum height=1.5cm] {S};

@@ -1,28 +1,12 @@
-\documentclass[Master, ngerman, UKenglish]{scrbook}
+\documentclass[Master, UKenglish]{scrbook}
 %------------------------------------------------------------------------------
-% This file contains a skeleton thesis for
-% a Physics or Astronomy Institute in the University of Bonn.
-
-% Specify the thesis type as an option: PhD, Master, Diplom, Bachelor.
 % Specify the thesis stage as an option: Draft (default), Submit, Final, PILibrary.
 
-% Specify the language(s) in the class and then use babel.
-% If you need more than one language, give the default language last,
-% e.g. ngerman, UKenglish for a thesis in British (UK) English where you want
-% to be able to set the language to German for some part of it.
-
-%------------------------------------------------------------------------------
-% Pass TeX Live version to the package.
-% Use command pdflatex --version to find out which version you are running.
 % twoside=true is suitable for printing, while twoside=false is probably better for PDF version.
 \usepackage[twoside=true,texlive=2022]{ubonn-thesis}
 
 %------------------------------------------------------------------------------
-% Adjustments to standard biblatex style.
-% Change option to backref=false when your thesis is ready to turn off back-referencing.
-% Pass the option showurl=false to shorten your bibliography by not including url fields.
 \usepackage[backref=true]{ubonn-biblatex}
-%------------------------------------------------------------------------------
 % Glossary package
 % \usepackage[acronym,toc,nosuper]{glossaries}
 % TikZ packages and libraries
@@ -36,8 +20,9 @@
 \usepackage{tablefootnote}
 \usepackage{multirow}
 \usepackage{booktabs}
+\usepackage{float}
 \usepackage{braket}
-% \usepackage{cleveref}
+\usepackage{cleveref}
 %------------------------------------------------------------------------------
 % Instead of colouring  links, cites, table of contents etc.
 % put them in a coloured box for the screen version.

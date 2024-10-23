@@ -6,19 +6,18 @@
 %==============================================================================
 % \newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
 \section{Background}
-We first provide a brief overview of continuum QCD and how to extract low-energy observables using lattice QCD. In the following section we describe the nature of the so-called signal-to-noise problem which plagues calculations in LQCD, most notably the extraction of hadronic observables. As the Euclidean time between operators increases, the signal-to-noise ratio degrades exponentially. It is standard practice to use quark field smearing algorithms to circumvent this problem and ultimately extract ground-state energies with better statistics. Next, we introduce the mature method of distillation \cite{peardon_novel_2009} and the improvements to the signal of correlation functions in contrast to traditional smearing techniques. This will spell out the theoretical basis for the proceeding chapter on operator construction and the computational implementation of described methods to ultimately capture the mesonic and di-meson spectrum, setting the stage for exotic hadrons. 
+We first provide a brief overview of continuum QCD and how to extract low-energy observables using lattice QCD. In the following section we describe the nature of the so-called signal-to-noise problem which plagues calculations in LQCD, most notably the extraction of hadronic observables. As the Euclidean time between operators increases, the signal-to-noise ratio degrades exponentially. It is standard practice to use quark field smearing algorithms to circumvent this problem and ultimately extract ground-state energies with better statistics. Next, we introduce the method of distillation~\cite{peardon_novel_2009} and the improvements to the signal of correlation functions in contrast to traditional smearing techniques. This will spell out the theoretical basis for the proceeding chapter on operator construction and the computational implementation of described methods to ultimately capture the mesonic and di-meson spectrum, setting the stage for exotic hadrons. 
 
 \section{Continuum QCD}
-QCD is the gauge theory of strong interactions with color $SU(3)$ as the underlying gauge group. The color degree of freedom was introduced into the quark model to satisfy the Pauli principle. The matter-fields in the theory are quarks (spin-$\frac{1}{2}$) fermions with six flavors and three possible colors (we don't detect these in experiment!). No quark has ever been observed as an asympotically-free state. During the 1970s, Gell-Mann\cite{Gell-Mann:1964ewy}and others \cite{PhysRevD.8.3633}\cite{PhysRevLett.31.494} tackled the question of exactly which symmetry of the quark model should be gauged. The ``hidden'' color degree of freedom possessed by quarks is plausible since we only observe color-singlets in nature. Thus, the strong forces between quarks with color need be colorless. Therefore, We can write down the QCD Lagrangian from the free-quark Lagrangian by applying the gauge principle with respect to the color gauge group $SU(3)$. The fundamental objects are the quark fields  $q_{\alpha,A}^{(f)}$ where $\alpha: 1,\dots,4$ are the Dirac-spinor indices, $f: 1,\dots,6$ denotes the flavor, and  $A: 1,2,3$ specifies the \text{color} index in the fundamental representation. 
+QCD is the gauge theory of strong interactions with color $SU(3)$ as the underlying gauge group. The color degree of freedom was introduced into the quark model to satisfy the Pauli principle. The matter-fields in the theory are quarks (spin-$\frac{1}{2}$) fermions with six flavors and three possible colors (we don't detect these in experiment!). No quark has ever been observed as an asymptotically-free state. During the 1970s, Gell-Mann\cite{Gell-Mann:1964ewy}and others \cite{PhysRevD.8.3633}\cite{PhysRevLett.31.494} tackled the question of exactly which symmetry of the quark model should be gauged. The ``hidden'' color degree of freedom possessed by quarks is plausible since we only observe color-singlets in nature. Thus, the strong forces between quarks with color need be colorless. Therefore, We can write down the QCD Lagrangian from the free-quark Lagrangian by applying the gauge principle with respect to the color gauge group $SU(3)$. The fundamental objects are the quark fields  $q_{\alpha,A}^{(f)}$ where $\alpha: 1,\dots,4$ are the Dirac-spinor indices, $f: 1,\dots,6$ denotes the flavor, and  $A: 1,2,3$ specifies the \text{color} index in the fundamental representation. 
 The QCD Lagrangian is 
 \begin{align}
     \mathcal{L}_{QCD} = \sum_{f=1}^{6} \sum_{a,b=1}^{3} \sum_{\alpha,\beta,\mu=0}^{3} \bar{q}_{\alpha a}^{(f)}(i(\gamma^\mu)_{\alpha \beta}(\mathcal{D}_{\mu;ab}) - m_f\delta_{\alpha \beta}\delta_{ab}) q_{\beta b}^{(f)} + \sum_{i=1}^{8}\sum_{\mu,\nu=0}^{3} -\frac{1}{4} G_{\mu\nu}^i G_i^{\mu\nu}
 \end{align}
 where $G_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu - ig[A_\mu,A_\nu]$ contains the gluons (gauge fields) $A_\mu = \sum_{a=1}^{8}A_\mu^a \lambda^a/2$ where $\lambda^a$ are the Gell-Mann matrices that index $1,\dots 8$ corresponding to the adjoint representation of $SU(3)$. The covariant derivative $\mathcal D_\mu$ acts on the quark fields like so $\mathcal D_\mu q_k = (\partial_\mu - igA_\mu)q_k$ 
-$\mathcal{L}_{QCD}$ exhibits all the symmetries of the quark model and of course all discrete symmetries of the strong interaction, e.g. charge conjugation, parity, and strangeness(since the gluons are flavorless objects) \cite{Cheng1984GaugeTO}. These symmetries only become manifest via gauge invariance and renormalizability; In fact, $\mathcal{L}_{QCD}$ is derivable from the general form of the SU(3) Yang-Mills theory of quarks and gluons, see \cite{Cheng1984GaugeTO} for further details on this derivation. 
-
+$\mathcal{L}_{QCD}$ exhibits all the symmetries of the quark model and of course all discrete symmetries of the strong interaction, e.g. charge conjugation, parity, and strangeness(since the gluons are flavorless objects) \cite{Cheng1984GaugeTO}. These symmetries only become manifest via gauge invariance and renormalizability; In fact, $\mathcal{L}_{QCD}$ is derivable from the SU(3) Yang-Mills theory of quarks and gluons, which is devoid of fermions. See~\cite{Cheng1984GaugeTO} for further details on this derivation. 
 \subsection{Path integral formulation of QCD}
-Wilson \cite{Wilson:1974sk} first introduced lattice gauge theory in 1974 where both space and time are discretized. The quantization of the gauge fields is done via a Wick rotation to Euclidean space $t\rightarrow i\tau$. We will arrive at this by starting with the real scalar free QFT in Euclidean space,
+Wilson~\cite{Wilson:1974sk} first introduced lattice gauge theory in 1974 where both space and time are discretized. The quantization of the gauge fields is done via a Wick rotation to Euclidean space $t\rightarrow i\tau$. We will arrive at this by starting with the real scalar free QFT in Euclidean space,
 \begin{align}
     Z_{Eu.}[J] = \int D\phi \text{exp}{-\frac{1}{2} \int d^4x \phi^T(x)[\partial^2 +m^2] \phi(x) + \int d^4xJ^T(x)\phi(x)} 
 \end{align}  
@@ -46,11 +45,11 @@ where the matrix element is again a time ordered product. In momentum space, the
 \end{eqnarray}
 Using properties of Gaussian integrals, 
 \begin{align}
-    Z[0] = N \frac{1}{\sqrt{det(D)}}
+    Z[0] = N \frac{1}{\sqrt{\det(D)}}
 \end{align}
 with the Fermionic piece 
 \begin{align}
-    det(D) e^{J^TD^{-1}J}
+    \det(D) e^{J^TD^{-1}J}
 \end{align}
 
 Wilson's formulation of the Feynman path integral of QCD as a statistical mechanical sampling of the related Euclidean spacetime integral path 
@@ -59,7 +58,7 @@ Wilson's formulation of the Feynman path integral of QCD as a statistical mechan
 \end{align}
 We have to compute the Grassman numbers by hand 
 \begin{align}
-    Z_{QCD} = \int DA_\mu det D[A_\mu]e^{\underbrace{\frac{-1}{4}G^2}_{\text{Gauge action}}}
+    Z_{QCD} = \int DA_\mu \det D[A_\mu]e^{\underbrace{\frac{-1}{4}G^2}_{\text{Gauge action}}}
 \end{align}
 Which implies that for every configuration of ``Glue''(gauge fields), we have to know the value of the determinant. As we shall see, we don't actually evaluate this determinant, rather, we introduce ``pseudo-fermions'' into the QCD partition function 
 \begin{equation}
@@ -67,15 +66,15 @@ Which implies that for every configuration of ``Glue''(gauge fields), we have to
 \end{equation} where $D_{A\mu}^{-1}$ is a large sparse matrix with small eigenvalues. Now we have 
 \begin{align}
     & \text{(Exactly solvable Gaussian)} \times \int d\phi d\phi^* e^{-\phi^*T D^{-1}\phi} \\ 
-    &= \left(\frac{1}{det(D)}\right)^{-1} \\
-    &= det(D)
+    &= \left(\frac{1}{\det(D)}\right)^{-1} \\
+    &= \det(D)
 \end{align}
 which illuminates the large computational cost required of sparse matrix inversions, luckily, modern GPUs handle matrix multiplication well. Define an example Lattice universe of size $32^3 \times 96$ where $N_x=N_y=N_z = 32, \quad N_t=96$. Express 4D spacetime as a column vector: 
 \begin{align}
    \underbrace{\psi(x)}_{field} = 32^3 \times 96 \times \underbrace{3}_{color} \times \underbrace{4}_{spin} = 12 \times 3145728 \quad \text{sites} 
 \end{align}
 The modus operandi is thus to manipulate matrices of this size with the computer. 
-As a brief forary into the computational considerations, which will be further hashed out in the next chapter, consider the compute time of a matrix inversion: 
+As a brief foray into the computational considerations, which will be further hashed out in the next chapter, consider the compute time of a matrix inversion: 
 \begin{align}
     t_{cpu}\left(D^{-1} = \frac{\lambda_{max}}{\lambda_{min}}\right) \quad \text{(eigenvalues)} \\ 
     \lambda_{QCD}[D] \sim m_{u,d} \qquad ;\quad  m_{u,d} \ll \Lambda_{QCD} \ll \frac{1}{a} \\
@@ -90,8 +89,8 @@ Let
 \begin{align}
     S = \int d^4x \mathcal{L}(x) \\
     S_{LQCD} = \sum_{nm}^{} a^{n-4}\alpha_s^m S_{n,m} 
-\end{align} where $n\geq4,m\geq0$. This is an expansion abotu the continuum limit, the first term in the expansion is exactly QCD. The remaining terms are the discretization effects resulting from the theory being transcribed in a finite box with boundary conditions. If we extrapolate to 0, we exactly recover the continuum theory of QCD. 
-It needs to be emphasized that LQCD is \textbf{not} a model, rather, it is the only non-perturbative regularization scheme in the infrared regime that is systematically improvable, meaning one can dial the input parameters. This improvement manifests itself via the following properties of discretized spacetime, which are tightly coupled to high-performance computing architecture. The crucial feature of this discretized version of the continuum theory is gauge covariance, namely $m_{gluon} \rightarrow 0$, which is the only way the theory can remain renormalizable without adding new terms.  
+\end{align} where $n\geq4,m\geq0$. This is an expansion about the continuum limit, the first term in the expansion is exactly QCD. The remaining terms are the discretization effects resulting from the theory being transcribed in a finite box with boundary conditions. If we extrapolate to 0, we exactly recover the continuum theory of QCD. 
+It needs to be emphasized that LQCD is indeed the only non-perturbative regularization scheme in the infrared regime that is systematically improvable, meaning one can dial the input parameters. This improvement manifests itself via the following properties of discretized spacetime, which are tightly coupled to high-performance computing architecture. The crucial feature of this discretized version of the continuum theory is gauge covariance, namely $m_{gluon} \rightarrow 0$, which is the only way the theory can remain renormalizable without adding new terms.  
 \begin{itemize}
     \item Discretization scale ($a$) where there are no infinities at finite values of $a$
     \item Finite Volume 
@@ -154,7 +153,7 @@ The fundamental square of a hypercubic lattice is the plaquette, $U_{\mu\nu}(x)$
 \begin{equation}
     U_{\mu\nu}(x) = \text{Tr} \left[ U_\mu(x) U_\nu(x + \hat{\mu}) U_\mu^\dagger(x + \hat{\nu}) U_\nu^\dagger(x) \right]
 \end{equation}
-The wilson gauge action, simple and unimproved, is a sum over all plaquettes
+The Wilson gauge action, simple and unimproved, is a sum over all plaquettes
 \begin{align}
     S_G[U] = \frac{2}{g^2} \sum_{n\in\Lambda}^{}\sum_{\mu < \nu}^{} Re\left(Tr\left[\mathbb{I} - U_{\mu\nu}(x)\right]\right)
 \end{align}
@@ -196,16 +195,16 @@ Finally, we take Wilson's choice $U_\mu(x) = \exp\left(iaA_\mu(x)\right)$ and in
     U_\mu\nu(x) = \exp\left(ia^2F_{\mu\nu}(x) + \mathcal{O}(a^3) \right)
 \end{equation} where $F_{\mu\nu}(x) = -i\left[D_\mu(x),D_\nu(x)\right]$ is a commutator of covariant derivatives. 
 
-The \textbf{Lattice version of the fermion action} is
+The general form of the \textbf{Lattice version of the fermion action} is
 \begin{equation}
     S_F^0 = a^4 \sum_{x\in\Lambda}^{} \bar{\psi}(x)\left(\sum_{\mu=1}^{4} \gamma_\mu \frac{\psi(x+\hat{\mu}) -\psi(x-\hat{\mu}) }{2a} + m\psi(x)\right)
 \end{equation}
 
-and the \textbf{Lattice version of the Gluon action is} 
+and the general form \textbf{Lattice version of the Gluon action is} 
 \begin{equation}
     \frac{2N_c}{g^2} \sum_{x}^{} \sum_{\mu<\nu}^{} \left(1 - Re(Tr(U_\mu\nu(x)))\right)
 \end{equation}
-where $U_\mu\nu(x)$ can be freely substituted with a different plaquette. 
+where $U_\mu\nu(x)$ can be freely substituted with a different plaquette. It is legal to add terms to the discretized actions, as is done in the Symanzik improved gluon action that we employ, so long as the additional terms vanish in the continuum limit.  
 
 In summary, $S_{\text{LQCD}} = S_G + S_F$, which must be dimensionless. 
 \begin{equation}
@@ -240,11 +239,12 @@ Now the correlator can be fit with a decaying exponential using Bayesian methods
 \begin{equation}
     C_{ij}(\tau,\vec{p},\vec{x}) = \sum_{\vec{n}}^{} e^{-E_n\tau} Z_{n\vec{p}}^{(i)} Z_{n\vec{x}}^{\dagger(j)}
 \end{equation}
-Given the exhaustive derivation above, for the remainder of this work, we simplify the notation and write the correlation function between a basis of creation and annihilation operators at time $0,t$ as \cite{Dudek_2010}
-\begin{align}
-    &C_ij(t) = \braket{0|\mathcal{O_i}(t)\mathcal{O_j}(0)|0} \\
-    &= \sum_{n}^{} \frac{1}{2E_n}\braket{0|\mathcal{O}_i|n}\braket{n|\mathcal{O_j}|0}e^{-e_{NT}}    
-\end{align}
+We will present the distilled meson correlator for an isovector meson in \cref{sec:ops}.
+% Given the exhaustive derivation above, for the remainder of this work, we simplify the notation and write the correlation function between a basis of creation and annihilation operators at time $0,t$ as \cite{Dudek_2010}
+% \begin{align}
+%     &C_ij(t) = \braket{0|\mathcal{O_i}(t)\mathcal{O_j}(0)|0} \\
+%     &= \sum_{n}^{} \frac{1}{2E_n}\braket{0|\mathcal{O}_i|n}\braket{n|\mathcal{O_j}|0}e^{-e_{NT}}    
+% \end{align}
 
 \subsection{Summary of LQCD Formalism}
 In a nutshell, we have 
