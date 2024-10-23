@@ -1,8 +1,7 @@
 % !TEX root = mythesis.tex
 
 %==============================================================================
-\chapter{Hadron Spectroscopy on the Lattice}
-\label{sec:spec}
+\chapter{Hadron Spectroscopy on the Lattice}\label{sec:spec}
 %==============================================================================
 % \newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
 \section{Background}
@@ -239,7 +238,7 @@ Now the correlator can be fit with a decaying exponential using Bayesian methods
 \begin{equation}
     C_{ij}(\tau,\vec{p},\vec{x}) = \sum_{\vec{n}}^{} e^{-E_n\tau} Z_{n\vec{p}}^{(i)} Z_{n\vec{x}}^{\dagger(j)}
 \end{equation}
-We will present the distilled meson correlator for an isovector meson in \cref{sec:ops}.
+We will present the distilled meson correlator for an isovector meson in Chapter 4.
 % Given the exhaustive derivation above, for the remainder of this work, we simplify the notation and write the correlation function between a basis of creation and annihilation operators at time $0,t$ as \cite{Dudek_2010}
 % \begin{align}
 %     &C_ij(t) = \braket{0|\mathcal{O_i}(t)\mathcal{O_j}(0)|0} \\
@@ -298,7 +297,7 @@ This is the formulation of a plaquette, where the magnitude of the vectors $\hat
 
 \section{Distillation Smearing}
 The computation of all-to-all quark propagators is crucial in LQCD calculations of correlation functions for a suitably large set of interpolators. This is computationally expensive as the number of ``solves'' of the lattice Dirac matrix scales with the spatial and temporal extent of the lattice. By projecting quark fields into a subspace with rank less than that of the original vector space of fields on a time-slice, we can reliably compute all-to-all propagators\cite{peardon_novel_2009}. Within this reduced subspace, we can project operators onto definite momentum at both the source and sink. Hermiticity of operators is also guaranteed with this method, which bodes well for solving the GEVP within each irrep of interest. As scattering studies require well-controlled momentum insertions, this will serve us well at later stages of the $T_{cc}^+$ analysis.  
-The first order of business it to solve for the first $N_D$ eigenvectors with the smallest eigenvalues of the gauge-covariant Laplacian \ref{eq:laplace} such that 
+The first order of business it to solve for the first $N_D$ eigenvectors with the smallest eigenvalues of the gauge-covariant Laplacian such that 
 \begin{equation}\label{eq:eigs}
     -\nabla^2V = VD
 \end{equation} 

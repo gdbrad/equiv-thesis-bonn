@@ -1,12 +1,12 @@
 % !TEX root = mythesis.tex
 
 %==============================================================================
-\chapter{Towards the Quark Mass Dependence of $T_{cc}(3875)$}
-\label{sec:tcc}
+\chapter{Conclusion}\label{sec:tcc}
 % \newcommand{\todo}[1]{\textbf{\color{red}TODO: #1}}
 
 %==============================================================================
-In this section we briefly describe the remaining tasks and the end goals of this project which will comprise a Doctoral thesis. We endeavor to perform a rigourous analysis of the dependence of energy spectra and scattering phase shifts on the degree of distillation smearing. Our testing ground will be the single and double pion system for a collection of covariant derivatives and total momenta. This analysis for hadrons containing charm quarks will then follow suit. In this vein, the remaining tasks are 
+\section{Outlook: Towards the Quark Mass Dependence of $T_{cc}(3875)$}
+In this section we briefly describe the remaining tasks and the end goals of this project which will comprise a Doctoral thesis. We endeavor to perform a rigorous analysis of the dependence of energy spectra and scattering phase shifts on the degree of distillation smearing. Our testing ground will be the single and double pion system for a collection of covariant derivatives and total momenta. This analysis for hadrons containing charm quarks will then follow suit. In this vein, the remaining tasks are 
 \begin{itemize}
     \item computation of meson and doubly charmed spectrum for a range of center-of-mass momenta in various irreps of $O_h$
     \item Finite volume analysis of the discrete spectrum on several volumes and momentum frames
@@ -17,14 +17,13 @@ In this section we briefly describe the remaining tasks and the end goals of thi
 Hadrons containing heavy quarks are prone to discretization errors thus a controlled continuum limit at finite lattice spacing is required!
 
 
-\section{Exotic Hadrons in a (very small) nutshell}
+\subsection{Exotic Hadrons in a (very small) nutshell}
 Since the turn of the century, collider experiments have identified resonances that do not fit into the traditional quark model; The two competing hypotheses are that these states are either bound states of di-quarks and anti-di-quarks (tetraquarks) or di-meson states. 
-For comprehensive reviews the topic, see \cite{Chen}\cite{Guo:2017jvc} \cite{Brambilla:2019esw}We aim to confirm that the doubly charmed tetrqaurk state of interest is a member of the class of hadrons shown in g
+For comprehensive reviews the topic, see \cite{Chen}\cite{Guo:2017jvc} \cite{Brambilla:2019esw}We aim to confirm that the doubly charmed tetraquark state of interest is a member of the class of hadrons shown in g
 
 \begin{figure}[h]
     \includegraphics[width=1.0\textwidth]{hadron_states.png}
-    \caption{different structures of hadrons with emphasis on the di-meson state in (g) and the tetraquark state in (c)}
-    \label{fig:figure6}
+    \caption{different structures of hadrons with emphasis on the di-meson state in (g) and the tetraquark state in (c)}\label{fig:figure6}
     \end{figure}
 The particular color structure of a tetraquark that we will investigate is the hadronic molecule type 
 \begin{equation}
@@ -38,6 +37,11 @@ The flavor $SU(3)$ representations of the tetraquark states are \cite{sym1507129
 & = (1 \oplus 8)_{[qq]_{\bar{3}}[\bar{q}\bar{q}]_3} \oplus (8 \oplus 10)_{[qq]_6[\bar{q}\bar{q}]_3} \nonumber \\
 & \oplus (8 \oplus \bar{10})_{[qq]_{\bar{3}}[\bar{q}\bar{q}]\bar{6}} \oplus (1 \oplus 8 \oplus 27)_{[qq]_6[\bar{q}\bar{q}]_{\bar{6}}}
 \end{align} 
+
+\section{Conclusion}
+Our goal with this project is to better understand the exotic doubly charmed sector using a data-driven approach with LQCD and distillation in an attempt to dispel disagreement that currently exists in the experimental literature. In Chapter 2 we laid out the formalism for discretizing the continuum theory of QCD and how we transcribe this onto a computer such that we can compute Euclidean correlation functions on all possible gauge field configurations. We motivated our use of distillation smearing with an explanation of traditional quark field smearing methods; This will allow us to efficiently compute the necessary elements for performing hadron spectroscopy calculations, in the form of tensor contractions, while keeping the computational cost low. We laid out the computational considerations of our lattice setup in Chapter 3 and the required software stack to compute eigenpairs, meson elementals, and perambulators using distillation. We highlighted the cost and storage of this method and diagrammatically showed the layout of contracting distilled objects on the lattice to extract physical observables. The construction of a sufficiently large basis of interpolating operators to maximize overlap with energy levels of interest was outlined in Chapter 4. This requires both zero and non-zero values of total momentum and several levels of displacement to access all the spin channels in the continuum. In Chapter 5 we presented our preliminary study on mesonic signal saturation with distillation in order to pin down the optimal parameters to use for the remainder of the ensembles we have at our disposal, namely the rank of the distillation basis and the number of $t_{src}$ insertions. Based on this study, we will generate the rest of our objects using a distillation basis size of 96 and 24 source insertions. Ultimately, this setup will allow us to access the doubly charmed sector and construct di-meson states to extract scattering amplitudes to further probe XYZ states, see the Introduction chapter, with LQCD.  
+
+
 
 % \section{Multi-Hadron Interpolating Operators with charm quarks}
 % There is a vast amount of literature on computing the Charmonium spectrum with LQCD. See \todo{insert charm cites}

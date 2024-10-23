@@ -1,8 +1,7 @@
 % !TEX root = mythesis.tex
 
 %==============================================================================
-\chapter{Interpolating Operators}
-\label{sec:ops}
+\chapter{Interpolating Operators}\label{sec:ops}
 %==============================================================================
 
 The overarching aim of hadron spectroscopy on the lattice is to simulate hadrons that we observe in collider experiments. It is advantageous in lattice QCD studies to generate a large basis of interpolating operators to achieve maximal overlap with energy levels of interest. Distillation allows us to restrict this basis to maximize computational efficiency in both the generation of the fundamental objects (perambulators, elementals) and contractions. We first focus on the zero momentum case then extend this framework to non-zero momentum, e.g. mesons in flight. We need to construct operators with the flavor basis $\bar c\bar s ud$, $c\bar s u\bar d$, $cc\bar u\bar d$ and $c\bar c u\bar d$, which create and destroy a mesonic state, at some fixed time in Euclidean time. The destruction of the state is executed via a contraction of the creation operator with its adjoint at some later time $t$.  The information we can glean from this is the correlation of operators separated by some time $t$, whereby the transfer matrix eigenstates can be obtained. Moreover, the key difference between lattice and continuum eigenstates is the notion of spin, thus we must work in the circular basis of cartesian-vector-like derivative operators and gamma matrices \cite{Morningstar:2013bda}. Using the preceeding section on correlator function construction from contractions, here we will form local and non-local distilled bilinear operators in different irreps of $O_h$, which will comprise a $N \times N$ matrix of two-point correlation functions for each irrep, the GEVP. The dimension of this matrix is, not surprisingly, the number of operators constructed in the particular irrep, as we cannot mix operators with different continuum quantum numbers. Our test case will be $J^{PC} =0^{-+}$, e.g. a pseudoscalar such as the pion. We will walk through lattice operator construction to create a diqaurk $[\bar{q}q]$ of any spin ($J \in \mathbb{Z}$) and parity $P$ with two quark fields and an insertion of the covariant derivative $\nabla$ with gamma structure $\Gamma$, the product of which determines the spin $J$.  
@@ -14,6 +13,7 @@ Angular momentum ceases to be a good quantum number on the lattice. Thus, in ord
     \Lambda = {A_1,T_1,T_2,E,A_2}
 \end{align}
 \begin{table}
+    \centering
     \begin{tabular}{ccc}
     $\Lambda$ & $d_{\Lambda}$ & $J$\\ \hline
     $A_1$ & 1 & $0,4,6,\dots$\\
@@ -30,7 +30,7 @@ Angular momentum ceases to be a good quantum number on the lattice. Thus, in ord
 \section{Operators on the lattice}
 A hadronic operator is a functional of the lattice fields with supplied quantum numbers. These are the gauge-invariant color singlet objects. The lattice regulator ``breaks'' the $SO(3)$ subgroup to a discrete subgroup. $O,\bar{O}$ mapped into the appropriate Hilbert Space such that the corresponding operators $\hat{O} ,\hat{O^\dagger}$  annihilate and create the particle states of interest. We can identify physically allowed states via the spectral decomposition of propagators of interpolating operators: 
 \begin{equation}
-\braket{O(n_t)\bar{O(0)}} = \sum_{n}\braket{0|\hat{O}|k} \braket{k|\hat{O^{\dagger}}|0} e^{-n_taE_k}
+\braket{O(n_t)\bar{O}(0)} = \sum_{n}\braket{0|\hat{O}|k} \braket{k|\hat{O}^{\dagger}|0} e^{-n_taE_k}
 \end{equation}
 
 It is important to note that different spin and parity correspond to different gamma matrices in the fermionic bilinears. Armed with the continuum version of operators, which are classified via charge conjugation and Lorentz transformations, we can construct our lattice operators. The first step is to perform a Wick rotation so that our operators now reside in euclidean spacetime, then substitute the covariant derivatives with the lattice covariant derivative \cite{G_ckeler_1996}, 
@@ -144,7 +144,8 @@ To study orbitally excited mesons (higher spin states) we need to employ derivat
     \tilde{\psi}_(x_2)\Pi_P U \Gamma \psi(x_1)
 \end{align}
 where $\Gamma$ takes one of the following forms depending on the state of interest. To access the $J^{PC}=0^{-+}$ channel, we have a set of three pseudoscalar operators which we can then solve the GEVP for
-
+\begin{table}[H]
+    \centering
 \begin{tabular}{ccc}
     op. & name & cont. \\
     \hline
@@ -152,6 +153,8 @@ where $\Gamma$ takes one of the following forms depending on the state of intere
     $\gamma^4 \gamma^i \mathbb{B}^i$ & $(\rho_{(2)} \times \mathbb{B})_{A_1}$ & $0^{-+}$ \\
     $\gamma^4 \gamma^5 \gamma^i \nabla^i$ & $(b_1 \times \nabla)_{A_1}$ & $0^{-+}$ \\
     \end{tabular}
+\end{table}
+
 
 The advantage of employing nonlocal operators is to achieve access to states with nonzero orbital angular momentum. We act on local meson operators with gauge covariant lattice displacements on one (source or sink) or both (source and sink), the smeared quark fields of the discretized theory, to produce nonlocal operators. 
 
@@ -186,7 +189,8 @@ where $\lambda$ is the ``row'' of the irrep ($1\ldots\mathrm{dim}(\Lambda)$).
 %-------------------------------------------------------------------------------%
 
 \subsubsection{Two derivative operators}
-
+\begin{table}[H]
+\centering    
 \begin{tabular}{|c|c|}
     \hline
     Operator & Lattice spatial displacement correspondence\\
@@ -204,12 +208,12 @@ where $\lambda$ is the ``row'' of the irrep ($1\ldots\mathrm{dim}(\Lambda)$).
     % $\gamma_4 \gamma_5 \mathbb{E}^i$ & Correspondence not specified \\
     % \hline
 \end{tabular}
-
+\end{table}
 
 \subsubsection{Momentum projection}
 Although we have not yet implemented non-zero momentum into our analysis suite, we very briefly describe what it will entail \cite{Ueding_thesis}. For non-local operators used to construct mesons in flight, we must ``momentum project" into states of definite momentum, which will reside in some irreducible representation of the octahedral group. We want mesonic states to possess definite spatial momentum on each time slice. Note that it is only necessary to project one of the two interpolators of a correlation function to definite momentum, typically at the sink.
 $\tilde{O}(\textbf{p},n_t) = \frac{1}{\sqrt{\Lambda_3}} \sum_{n\in\Lambda_3} O(\textbf{n},nt)e^{-ia\textbf{np}}$ 
-At non-zero momentum, $O_h$ is broken down to the little groups of Dicyclic nature, eg. $DiC_2, DiC_4$. The extra ingredient required, in contrast to the zero momentum operators, are subduction coefficients that define the helicity operators. For these, we use the Wigner D-matrices then subduce into the irreps of the little group corresponding to the little group of the total momentum $\vec{P}$. See \cite{Basak_2005},\cite{morningstar_extended_2013} for further information. The crucial piece is that these interpolators for mesons in flight will be put into the GEVP for every relevant irrep. 
+At non-zero momentum, $O_h$ is broken down to the little groups of Dicyclic nature, e.g. $DiC_2, DiC_4$. The extra ingredient required, in contrast to the zero momentum operators, are subduction coefficients that define the helicity operators. For these, we use the Wigner D-matrices then subduce into the irreps of the little group corresponding to the little group of the total momentum $\vec{P}$. See \cite{Basak_2005},\cite{morningstar_extended_2013} for further information. The crucial piece is that these interpolators for mesons in flight will be put into the GEVP for every relevant irrep. 
 
 \section{Meson-Meson Interpolators}
 The global $SU(3)$ color symmetry requires that the minimal irreducible color singlet systems can only be $q\bar{q}$, $qqq$, $gg$, $q\bar{q}g$ etc., which implies that multi-quark systems can only exist as molecular configurations if there are no other binding mechanisms \cite{Abolnikov:2024key}. Moreover, as a consequence of the $SU(3)^C$ coupling rule, the state $QQ\bar{q}\bar{q}$ has a dimeson configuration as well as a diquark-antidiquark configuration \cite{Brambilla:2019esw}\cite{Padmanath_2022}. Due to the $SU(3)_c$ coupling rule, when treating tetraquarks as a dimeson system, $(q\bar{q})(q\bar{q})$, the two possible combinations of dimeson $SU(3)_c$ representations that produce a total color singlet state are $({1_c \otimes 1_c})_{1_c}$ and $({8_c \otimes 8_c})_{1_c}$\cite{Guo:2017jvc}. When the pseudoscalar $D$ and vector $D^*$ are coupled together, the resulting system is $DD^*$ with total angular momentum and parity $J^P = 1^+$. Moreover, the wave function of the tetraquark state $T_{cc}^+$ includes two color singlet channels:
@@ -238,6 +242,7 @@ Fermion-bilinear operators with continuum spin $J$ and momentum $\vec{p}$ are wr
 % \newpage
 % The interpolators we will consider follow that of ~\cite{Padmanath_2022} in Table I, 
 \begin{figure}
+    \centering
 \includegraphics[scale=0.6]{interpolator_table.png}\
 \caption{Interpolators along with their total momenta, spatial lattice symmetry group, total spin-parity, and partial wave (of $DD^*$ scattering) that contribute to each irreducible representation}
 \end{figure}

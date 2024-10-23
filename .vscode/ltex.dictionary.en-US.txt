@@ -1,0 +1,8 @@
+Chromodynamics
+dimeson
+tetraquarks
+diquark-antidiquark
+tetraquark
+irrep
+correlator
+mesonic

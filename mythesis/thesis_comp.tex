@@ -1,7 +1,6 @@
 % !TEX root = mythesis.tex
 %==============================================================================
-\chapter{Computational Considerations}
-\label{sec:comp}
+\chapter{Computational Considerations}\label{sec:comp}
 %==============================================================================
 The amount of compute time for generating the eigenbasis, and subsequently the perambulators and meson elementals, scales with the spatial extent of the lattice $N$ and the rank of the distillation basis $n$. We provide an overview of our lattice setup and a summary of the Hybrid Monte Carlo method for generating gauge configurations. Next, we present the software stack and pipeline for our calculations on the Jureca cluster, including the storage and runtime cost associated with each object necessary for performing hadron spectroscopy with distillation. As this framework hinges upon algebraic mulitigrid methods, we touch on the key points and how this technology interfaces with \texttt{Chroma} lattice objects. At the final stage, matrix elements(meson elementals) and perambulators are contracted together with some appropiate Dirac strucutre depending on the flavor and isospin channel (the $J^{PC}$ continuum quantum numbers to be accessed), which we elucidate diagramatically. The details of our 6-stout smeared ensembles are given for completion. Having a wide range of pion masses and lattice spacings to study will allow us to probe the quark mass dependence of the exotic doubly charmed tetraquark state $T_{cc}^+$.   
 
@@ -81,11 +80,12 @@ In order to perform spectroscopy calculations for a given ensemble, there exists
     \caption{Flowchart of the computational workflow for computing lattice objects with distillation.}
     \label{fig:alg_flow}
 \end{figure}
-\section{Algebraic Multigrid Methods in LQCD}
+\section{Multigrid Methods in LQCD}
 Computing fundamental building blocks on the lattice, which will each be discussed in the proceeding sections, requires sophisticated hardware architecure. We use the \verb|Chroma| software stack from USQCD \cite{Edwards_2005} compiled with \verb|superbblas| support (required for computing the distilled objects of interest), and the multigrid solver from \verb|QUDA|. We run the HPC tasks on a single GPU node, as we found multi-node jobs are not compatible with our stack and the Jureca cluster at JSC. This stack ultimately allows us to calculate a large class of matrix elements at high precision \cite{romero_efficient_2020} using distillation. 
 
 Before we dive into the details of the calculation of our distilled objects, it is useful to show how lattice objects in \texttt{Chroma} transform under different spaces with a tensor product structre \cite{Edwards_2005}. 
 \begin{table}
+  \centering
 \begin{displaymath}
   \begin{array}{llcccccl}
                     & {\textit Lattice} &    &  {\textit Color} &     & {\textit Spin}  &     & {\textit Complexity}\\
@@ -96,12 +96,10 @@ Before we dive into the details of the calculation of our distilled objects, it 
   {Gamma:}       & {\texttt Scalar}  &\otimes& {\texttt Scalar}    &\otimes& {\texttt Matrix(Ns)}&\otimes& {\texttt Complex}\\
   \end{array}
   \end{displaymath}
-  \caption{The tensor structure of \texttt{Chroma} objects.}
+  \caption{The tensor structure of \texttt{Chroma} objects. \texttt{Nd}: num. space-time dimensions, \texttt{Nc}: dimension of the color vector space, \texttt{Ns}: dimension of the spin vector space.
+  \cite{Edwards_2005}}
     \label{fig:chroma}
 \end{table}
-
-\verb|Nd| is the number of space-time dimensions, \verb|Nc| is the dimension of the color vector space, and \verb|Ns| is the dimension of the spin vector space.
-  
 Gauge fields can left-multiply fermions via color matrix $\times$ color vector but is diagonal in spin space (spin scalar $\times$ spin vector).
 A $\Gamma$ matrix can right-multiply a propagator (spin matrix $\times$ spin matrix) but is diagonal in color space (color matrix $\times$ color
 scalar). Say we have two lattice fermion fields $A, B$, a lattice color matrix, or gauge field \texttt{U}. At each lattice site, \texttt{U} is a scalar in spin space. The product 
@@ -114,7 +112,7 @@ scalar). Say we have two lattice fermion fields $A, B$, a lattice color matrix, 
 Sparse linear algebra is necessary to construct the smeared quark fields based on distillation, where the
 eigenvectors with smallest eigenvalues of the gauge-covariant Laplace operator $\nabla^2[t]$. 
 This is the first step in the calculation which is input data for the generation of elementals and perambulators. We use the \verb|Primme| eigensolver to obtain the eigenpairs(eigenvalues,eigenvectors) of the Hermitian Wilson-Dirac operator\cite{PRIMME}\cite{Frommer:2020ovr}. 
-the eigenbasis in distillation space contains the eigencvectors from the lowest-lying regime of the spectrum of the hermitian negative-definite Laplacian-like operator 
+The eigenbasis in distillation space contains the eigenvectors from the lowest-lying regime of the spectrum of the hermitian negative-definite Laplacian-like operator 
 \begin{equation}
   \nabla^{2(\vec{x},\vec{y})} = 6\delta_{\vec{x},\vec{y}} - \sum_{\vec{j}\in|(1,0,0),(0,10),(0,0,1)|}^{} U_{\vec{j}}^{(x)}\delta_{\vec{x}+\vec{j},\vec{y}} + U_{\vec{j}}^{(\vec{x}-\vec{j})^\dagger}\delta_{\vec{x}-\vec{j},\vec{y}}
 \end{equation}
@@ -126,17 +124,17 @@ Distillation smearing projects into the $N_D$ dimensional vector space like so
 
 
 \subsection{Calculating Meson Elementals}
-The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplcations are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. If we disregard the perambulators for a moment, the correlation functions are described by the correlation between meson elementals at the different time-slices. We can write the distilled meson elemental as 
+The calculation of our elemental building blocks requires tensor contractions. These matrix-matrix multiplications are accelerated with the \texttt{Superbblas} library \cite{dinapoli2013efficientuseblaslibrary}. These objects are calculated for every time-slice, on every gauge configuration, and with every combination of displacements. If we disregard the perambulators for a moment, the correlation functions are described by the correlation between meson elementals at the different time-slices. We can write the distilled meson elemental as 
 \begin{equation}
 \Phi^A_{\alpha\beta}(t) = V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \equiv V^{\dagger}(t)\mathcal{D}^A(t)V(t)S^A_{\alpha\beta}
 \end{equation} where $\mathcal{D}^A(t)$ is the lattice Dirac matrix and $S^A_{\alpha\beta}$ is the subduction coefficient, which is the identity for $\vec{P^2} = 0$.
-For non-zero displacement, the $\Gamma$ operator is no longer trivial in position and color space and requires single or double covariant derivatives, $\nabla_i$ where $i$ is in the x,y,or z direction, to act on the 3D spinor components at some time $t$. In the later section on derivative operators, we will show how this is expressed in the language of $\texttt{Chroma}$. For completeness, the elemental form for zero, single, and double derivative displacement,respectively, are: 
+For non-zero displacement, the $\Gamma$ operator is no longer trivial in position and color space and requires single or double covariant derivatives, $\nabla_i$ where $i$ is in the x,y,or z direction, to act on the 3D spinor components at some time $t$. In the later section on derivative operators, we will show how this is expressed in the language of $\texttt{Chroma}$. For completeness, the elemental form for zero, single, and double derivative displacement, respectively, are: 
 \begin{eqnarray}
   & V^{\dagger}(t) [\Gamma^A(t)]_{\alpha\beta} V(t) \\ 
   & V^{\dagger}(t) [\nabla_k(t)]_{\alpha\beta} V(t) \\ 
   & V^{\dagger}(t) [\nabla_k(t)\nabla_l(t)]_{\alpha\beta} V(t)
 \end{eqnarray}
-This tensor contraction invovles the following\cite{romero_efficient_2020}: 
+This tensor contraction involves the following\cite{romero_efficient_2020}: 
 \begin{itemize}
   \item Two 5-dimensional tensors (the distillation basis) $v,w$, the coordinates of which are on the \textbf{spatial} extent of the lattice $N_L$, three color space components, and the distillation basis column index 
   \item  4-dimensional tensor $z$ representing a phase $z^{\vec{x},l} = e^{-i\vec{p}\vec{x}}$ which carries a component in $N_L$ as well as a momentum index
@@ -152,26 +150,25 @@ The perambulator characterizes the distilled version of a quark propagator from 
 \end{equation} where we can factorize these $4N_v \times 4N_v$ matrices like so 
 \begin{equation}
   (4 \times 4) \otimes (N_v \times N_v)
-\end{equation} yielding $16N_v^2$ inner products and $4N_v$ inversions. One can immediately form the permabulator $\tau(t_0,t_f)$ for all values of $t_0$ after solving for the vector $D^{-1}v_{j\beta}[t_f]$ on each configuration; Each configuration will have its own perambulator binary file containing information over all possible time slices. We use the Wilson-Clover multigrid solver from $\texttt{QUDA}$ \cite{quda} specifially the GCR solver(a Krylov solver) to calculate the linear system of equations 
+\end{equation} yielding $16N_v^2$ inner products and $4N_v$ inversions. One can immediately form the perambulator $\tau(t_0,t_f)$ for all values of $t_0$ after solving for the vector $D^{-1}v_{j\beta}[t_f]$ on each configuration; Each configuration will have its own perambulator binary file containing information over all possible time slices. We use the Wilson-Clover multigrid solver from $\texttt{QUDA}$ \cite{quda} specifically the GCR solver(a Krylov solver) to calculate the linear system of equations 
 \begin{equation}
   Dx^{i\alpha} = v_{i\alpha}(t)
 \end{equation} where $i$ is the rank of the distillation basis, $\alpha$ is a color index, and $t$ is indexed along the temporal extent of the lattice. 
-
-
 \section{Cost and Storage of Distillation}
-      As we highlighted in \cref{sec:spec}, distillation restricts operators to a small subspace while maintaining overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can resue them to correlate a collection of interpolators.
-      \vspace{1em}
+      As we highlighted in the previous section, distillation restricts operators to a small subspace while maintaining overlap with relevant eigenstates. As the computational cost is directly proportional to the size of matrices one is manipulating, a reduction in the rank of operators slashes the cost of computing the propagation matrix. Once a suitable set of perambulators are computed, we can reuse them to correlate a collection of interpolators.
         \begin{table}[H]
-        \begin{minipage}{16cm}
-        \hspace*{2em}\begin{tabular}{ccc}
+          \centering
+        \begin{minipage}{\textwidth}
+          \centering
+        \begin{tabular}{ccc}
         Computation    & Operations cost & Memory footprint \\ \hline
-        Distillation basis\footnote{Generate colorvector matrix elements}& $N^3Tn^3D$         & $N^3nT$      \\
+        Distillation basis\footnote{Generate colorvector matrix elements}& $N^3Tn^3$         & $N^3nT$      \\
         Meson elementals\footnote{Contract two matrices $\to$ tensor} & $N^3Tn^3$      & $N^3n + n^3$  \\
         Perambulators\footnote{Projection of the inverse Dirac operator $\to$ square matrices} & $N^3Tn$   & $N^3Tn$            \\
         Contractions\footnote{Contract together matrix elements and perambulators}   & $n^4T$    & $n^{3}T$   
         \end{tabular}
         \end{minipage}
-        \caption{computational cost with reference time per gauge configuration and time-slice source to calculate a two point correlation function. $N$: lattice size, $n$: rank of distillation basis}
+        \caption{computational cost with reference time per gauge configuration and time-slice source to calculate a two point correlation function. $N$: lattice size, $n$: rank of distillation basis, $T$: lattice temporal extent}
       \end{table}
 
   \section{Contractions}
